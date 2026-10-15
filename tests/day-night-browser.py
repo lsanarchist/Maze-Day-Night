@@ -1,0 +1,93 @@
+"""Step clock + atmosphere browser acceptance. Default tests real Canvas fallback.
+Use --url http://localhost:5173 after npm install to additionally require/test WebGL.
+Dependencies: Python, playwright, Chromium. No production runtime dependency.
+"""
+import argparse, json
+from pathlib import Path
+from playwright.sync_api import sync_playwright
+ROOT = Path(__file__).resolve().parents[1]
+p = argparse.ArgumentParser();p.add_argument('--url');p.add_argument('--browser',default='/usr/bin/chromium');p.add_argument('--output',default=str(ROOT/'test-results'/'day-night'));args=p.parse_args()
+out=Path(args.output);out.mkdir(parents=True,exist_ok=True)
+checks=[];errors=[]
+def check(name,condition):
+    if not condition: raise AssertionError(name)
+    checks.append(name);print('PASS:',name)
+with sync_playwright() as pw:
+    browser=pw.chromium.launch(executable_path=args.browser,headless=True,args=['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage'])
+    context=browser.new_context(viewport={'width':1440,'height':1000},accept_downloads=True)
+    page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
+    if args.url:page.goto(args.url,wait_until='networkidle')
+    else:
+        page.route('https://**/*',lambda route:route.abort())
+        page.set_content((ROOT/'dist/index.html').read_text(),wait_until='load')
+    page.wait_for_function('window.mazeLab !== undefined');page.wait_for_timeout(250)
+    state=lambda:page.evaluate('mazeLab.snapshot()')
+    clock=lambda:state()['clock']
+    check('World clock and diagram are visible at startup',page.locator('#world-time').inner_text()=='08:00' and page.locator('.orbit-clock').is_visible())
+    check('Default mode is random 30–60 minutes',clock()['stepMode']=='random')
+    check('No uncaught startup errors',not errors)
+    if args.url:check('WebGL is REQUIRED in URL test mode, not silently substituted',state()['engine']=='three')
+    def set_time(minutes):
+        if not page.locator('#time-settings').get_attribute('open'):page.locator('#time-settings summary').click()
+        page.locator('#time-scrubber').evaluate('(el,v)=>{el.value=String(v);el.dispatchEvent(new Event("input",{bubbles:true}))}',minutes)
+        page.locator('#world-time').click()
+        page.wait_for_timeout(120)
+    page.locator('#width').fill('4');page.locator('#height').fill('4');page.locator('#loops').evaluate("e=>{e.value=100;e.dispatchEvent(new Event('input'))}");page.locator('#generate-btn').click()
+    page.locator('#step-minutes').select_option('45');check('Duration selector updates clock without advancing it',clock()['time']=='08:00' and clock()['stepMode']=='45')
+    page.locator('#viewport').focus();page.keyboard.press('ArrowUp');check('A blocked step consumes no minutes',clock()['time']=='08:00')
+    page.wait_for_timeout(170);before=page.locator('#orbit-sun').get_attribute('transform');page.keyboard.press('ArrowRight')
+    check('One valid keyboard move adds 45 minutes',clock()['time']=='08:45' and state()['moves']==1)
+    page.wait_for_timeout(350);check('The orbit marker moves with committed time',before!=page.locator('#orbit-sun').get_attribute('transform'))
+    before=clock()['totalMinutes'];page.wait_for_timeout(300);check('Idle real time does not change game time',clock()['totalMinutes']==before)
+    set_time(1425);page.locator('#viewport').focus();page.keyboard.press('ArrowLeft')
+    check('Keyboard step crosses midnight and increments day',clock()['time']=='00:30' and clock()['day']==2)
+    page.wait_for_timeout(200);check('Visual clock moves forward over midnight',1425<state()['visualMinutes']<=1470)
+    before=clock()['totalMinutes'];page.locator('#camera-2d').click();page.wait_for_timeout(150)
+    check('Camera switch preserves world clock',clock()['totalMinutes']==before)
+    if args.url:
+        page.locator('#camera-3d').click();check('Both real cameras preserve time',clock()['totalMinutes']==before and state()['cameraType']=='PerspectiveCamera')
+    page.locator('#reset-player').click();check('Player reset does not rewind time',clock()['totalMinutes']==before and state()['moves']==0)
+    page.locator('#step-btn').click();check('Algorithm single-step does not advance world time',clock()['totalMinutes']==before and state()['expanded']==1)
+    page.locator('#speed').evaluate("e=>{e.value=120;e.dispatchEvent(new Event('input'))}");page.locator('#run-btn').click();page.wait_for_function("mazeLab.snapshot().phase==='solved'")
+    check('Complete path search leaves clock unchanged',clock()['totalMinutes']==before)
+    path_length=len(state()['path'])-1;page.locator('#walk-btn').click();page.wait_for_function("mazeLab.snapshot().phase==='won'")
+    check('Auto-walk counts exactly one time increment per edge',clock()['totalMinutes']==before+45*path_length)
+    page.locator('#step-minutes').select_option('random');before=clock()['totalMinutes'];page.locator('#reset-player').click();page.locator('#viewport').focus();page.keyboard.press('ArrowRight')
+    delta=clock()['totalMinutes']-before;check('Random increment lies within 30–60 minutes',30<=delta<=60 and clock()['lastStep']==delta)
+    check('Last consumed time is shown in the interface',f'+{delta} хв' in page.locator('#last-time-step').inner_text())
+    page.locator('#lantern-btn').click();check('Lantern toggle is reflected in state and ARIA',clock()['lantern']==False and page.locator('#lantern-btn').get_attribute('aria-pressed')=='false')
+    saved=clock();page.evaluate("() => {window.__blobs=[];const old=URL.createObjectURL;URL.createObjectURL=b=>{window.__blobs.push(b);return old(b)}}")
+    page.locator('#export-btn').click();exported=page.evaluate("async()=>JSON.parse(await __blobs.at(-1).text())")
+    check('JSON carries time, step mode and lantern setting',exported['world']['totalMinutes']==saved['totalMinutes'] and not exported['world']['lantern'])
+    set_time(720);page.locator('#import-file').set_input_files({'name':'with-clock.json','mimeType':'application/json','buffer':json.dumps(exported).encode()})
+    page.wait_for_timeout(150);check('Import restores time, duration and lantern',clock()['totalMinutes']==saved['totalMinutes'] and clock()['stepMode']==saved['stepMode'] and not clock()['lantern'])
+    invalid=json.loads(json.dumps(exported));invalid['world']['totalMinutes']=-999;before=state()
+    page.locator('#import-file').set_input_files({'name':'invalid-clock.json','mimeType':'application/json','buffer':json.dumps(invalid).encode()});page.wait_for_timeout(120)
+    check('Invalid imported clock is rejected atomically',state()['maze']==before['maze'] and clock()['totalMinutes']==before['clock']['totalMinutes'])
+    page.locator('#lantern-btn').click()
+    # Default-size actual rendered previews, through the public UI only.
+    page.locator('#width').fill('16');page.locator('#height').fill('16');page.locator('#loops').evaluate("e=>{e.value=8;e.dispatchEvent(new Event('input'))}");page.locator('#generate-btn').click()
+    if args.url:page.locator('#camera-3d').click()
+    set_time(720);page.wait_for_timeout(3100)
+    check('Noon shows daytime label and sunlight model',page.locator('#world-phase').inner_text()=='День' and state()['sky']['sunPower']>3)
+    if args.url:check('Actual daytime directional light is on and moonlight off',state()['lighting']['sunIntensity']>3 and state()['lighting']['moonIntensity']==0)
+    page.screenshot(path=str(out/'day.png'));day=page.locator('canvas.scene-canvas').screenshot()
+    set_time(1080);page.wait_for_timeout(250);check('Sunset label is correct',page.locator('#world-phase').inner_text()=='Захід сонця');page.screenshot(path=str(out/'sunset.png'))
+    set_time(0);page.wait_for_timeout(300)
+    check('Midnight shows night label and moon model',page.locator('#world-phase').inner_text()=='Ніч' and state()['sky']['moonPower']>.8)
+    if args.url:check('Actual moonlight is on and stars enabled',state()['lighting']['moonIntensity']>.8 and state()['lighting']['starsOpacity']>.8)
+    page.screenshot(path=str(out/'night.png'));night=page.locator('canvas.scene-canvas').screenshot()
+    check('The actual rendered canvas changes, not only the UI labels',day!=night)
+    page.locator('#time-settings summary').click();page.locator('#time-input').fill('23:15');page.locator('#time-apply').click()
+    check('Explicit HH:mm input sets the world time',clock()['time']=='23:15')
+    page.locator('#time-reset').click();check('Explicit clock reset restores day 1 at 08:00',clock()['time']=='08:00' and clock()['day']==1)
+    page.locator('#world-time').click()
+    page.set_viewport_size({'width':390,'height':844});page.wait_for_timeout(200)
+    check('Mobile view fits without horizontal overflow',page.evaluate('document.documentElement.scrollWidth<=innerWidth'))
+    check('Clock and duration controls remain available on mobile',page.locator('#world-time').is_visible() and page.locator('#step-minutes').is_visible())
+    page.locator('#time-settings summary').click();box=page.locator('.time-popover').bounding_box()
+    check('Mobile time popover remains within the screen',box['x']>=0 and box['x']+box['width']<=390)
+    page.locator('#world-time').click();page.screenshot(path=str(out/'mobile.png'),full_page=True)
+    check('No uncaught errors throughout day/night workflow',not errors)
+    report={'passed':len(checks),'checks':checks,'engine':state()['engine'],'webgl_tested':state()['engine']=='three','uncaught_errors':errors}
+    (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps({k:v for k,v in report.items() if k!='checks'}));browser.close()

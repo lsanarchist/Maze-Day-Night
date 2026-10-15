@@ -1,0 +1,16 @@
+{
+  "name": "maze-lab-threejs",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Interactive maze laboratory: 2D/3D cameras, step-driven day/night, sun, moon, lantern, BFS/DFS/A*, editor.",
+  "scripts": {
+    "start": "node tools/serve.mjs",
+    "dev": "node tools/serve.mjs",
+    "build": "node tools/build.mjs",
+    "test": "node --test tests/*.test.js",
+    "check": "node tools/check.mjs"
+  },
+  "dependencies": {"three": "0.180.0"},
+  "engines": {"node": ">=18"}
+}

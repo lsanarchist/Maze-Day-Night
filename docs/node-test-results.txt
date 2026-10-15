@@ -1,0 +1,884 @@
+
+> maze-lab-threejs@1.1.0 test
+> node --test tests/*.test.js
+
+TAP version 13
+# Subtest: Perfect DFS maze 4x4: connected, symmetric, V-1 edges
+ok 1 - Perfect DFS maze 4x4: connected, symmetric, V-1 edges
+  ---
+  duration_ms: 8.686047
+  type: 'test'
+  ...
+# Subtest: Perfect DFS maze 4x40: connected, symmetric, V-1 edges
+ok 2 - Perfect DFS maze 4x40: connected, symmetric, V-1 edges
+  ---
+  duration_ms: 12.948161
+  type: 'test'
+  ...
+# Subtest: Perfect DFS maze 40x4: connected, symmetric, V-1 edges
+ok 3 - Perfect DFS maze 40x4: connected, symmetric, V-1 edges
+  ---
+  duration_ms: 3.47056
+  type: 'test'
+  ...
+# Subtest: Perfect DFS maze 16x16: connected, symmetric, V-1 edges
+ok 4 - Perfect DFS maze 16x16: connected, symmetric, V-1 edges
+  ---
+  duration_ms: 3.806178
+  type: 'test'
+  ...
+# Subtest: Perfect DFS maze 20x20: connected, symmetric, V-1 edges
+ok 5 - Perfect DFS maze 20x20: connected, symmetric, V-1 edges
+  ---
+  duration_ms: 11.277796
+  type: 'test'
+  ...
+# Subtest: Perfect DFS maze 40x40: connected, symmetric, V-1 edges
+ok 6 - Perfect DFS maze 40x40: connected, symmetric, V-1 edges
+  ---
+  duration_ms: 24.218767
+  type: 'test'
+  ...
+# Subtest: Deterministic seed with loops=0
+ok 7 - Deterministic seed with loops=0
+  ---
+  duration_ms: 15.27985
+  type: 'test'
+  ...
+# Subtest: Deterministic seed with loops=0.08
+ok 8 - Deterministic seed with loops=0.08
+  ---
+  duration_ms: 2.202316
+  type: 'test'
+  ...
+# Subtest: Deterministic seed with loops=0.4
+ok 9 - Deterministic seed with loops=0.4
+  ---
+  duration_ms: 6.858813
+  type: 'test'
+  ...
+# Subtest: Deterministic seed with loops=1
+ok 10 - Deterministic seed with loops=1
+  ---
+  duration_ms: 3.357362
+  type: 'test'
+  ...
+# Subtest: Different seeds produce different mazes
+ok 11 - Different seeds produce different mazes
+  ---
+  duration_ms: 4.578385
+  type: 'test'
+  ...
+# Subtest: PRNG produces reproducible values in [0,1)
+ok 12 - PRNG produces reproducible values in [0,1)
+  ---
+  duration_ms: 6.727264
+  type: 'test'
+  ...
+# Subtest: Loops=1 opens all interior edges but preserves exterior boundary
+ok 13 - Loops=1 opens all interior edges but preserves exterior boundary
+  ---
+  duration_ms: 0.640614
+  type: 'test'
+  ...
+# Subtest: Reject invalid generation parameters [3,4]
+ok 14 - Reject invalid generation parameters [3,4]
+  ---
+  duration_ms: 0.489716
+  type: 'test'
+  ...
+# Subtest: Reject invalid generation parameters [4,41]
+ok 15 - Reject invalid generation parameters [4,41]
+  ---
+  duration_ms: 0.109517
+  type: 'test'
+  ...
+# Subtest: Reject invalid generation parameters [4.5,5]
+ok 16 - Reject invalid generation parameters [4.5,5]
+  ---
+  duration_ms: 0.106068
+  type: 'test'
+  ...
+# Subtest: Reject invalid generation parameters [null,4]
+ok 17 - Reject invalid generation parameters [null,4]
+  ---
+  duration_ms: 0.076376
+  type: 'test'
+  ...
+# Subtest: Reject invalid generation parameters [null,4]
+ok 18 - Reject invalid generation parameters [null,4]
+  ---
+  duration_ms: 0.370855
+  type: 'test'
+  ...
+# Subtest: Reject invalid generation parameters ["4",4]
+ok 19 - Reject invalid generation parameters ["4",4]
+  ---
+  duration_ms: 0.17312
+  type: 'test'
+  ...
+# Subtest: Reject invalid generation parameters [4,4,"x",-1]
+ok 20 - Reject invalid generation parameters [4,4,"x",-1]
+  ---
+  duration_ms: 0.09147
+  type: 'test'
+  ...
+# Subtest: Reject invalid generation parameters [4,4,"x",2]
+ok 21 - Reject invalid generation parameters [4,4,"x",2]
+  ---
+  duration_ms: 0.074209
+  type: 'test'
+  ...
+# Subtest: Reject invalid generation parameters [4,4,"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"]
+ok 22 - Reject invalid generation parameters [4,4,"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"]
+  ---
+  duration_ms: 0.15262
+  type: 'test'
+  ...
+# Subtest: Reject invalid generation parameters [4,4,123]
+ok 23 - Reject invalid generation parameters [4,4,123]
+  ---
+  duration_ms: 0.076839
+  type: 'test'
+  ...
+# Subtest: setWall changes both sides and never opens boundary
+ok 24 - setWall changes both sides and never opens boundary
+  ---
+  duration_ms: 0.420177
+  type: 'test'
+  ...
+# Subtest: Clone does not alias the wall array
+ok 25 - Clone does not alias the wall array
+  ---
+  duration_ms: 0.588905
+  type: 'test'
+  ...
+# Subtest: Invalid neighbor input is outside the board
+ok 26 - Invalid neighbor input is outside the board
+  ---
+  duration_ms: 0.599482
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=0
+ok 27 - BFS, A*, DFS vs reference on cyclic maze seed=0
+  ---
+  duration_ms: 2.962345
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=1
+ok 28 - BFS, A*, DFS vs reference on cyclic maze seed=1
+  ---
+  duration_ms: 6.342749
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=2
+ok 29 - BFS, A*, DFS vs reference on cyclic maze seed=2
+  ---
+  duration_ms: 5.619251
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=3
+ok 30 - BFS, A*, DFS vs reference on cyclic maze seed=3
+  ---
+  duration_ms: 2.428545
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=4
+ok 31 - BFS, A*, DFS vs reference on cyclic maze seed=4
+  ---
+  duration_ms: 4.29829
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=5
+ok 32 - BFS, A*, DFS vs reference on cyclic maze seed=5
+  ---
+  duration_ms: 3.99766
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=6
+ok 33 - BFS, A*, DFS vs reference on cyclic maze seed=6
+  ---
+  duration_ms: 0.948091
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=7
+ok 34 - BFS, A*, DFS vs reference on cyclic maze seed=7
+  ---
+  duration_ms: 0.7698
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=8
+ok 35 - BFS, A*, DFS vs reference on cyclic maze seed=8
+  ---
+  duration_ms: 2.318135
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=9
+ok 36 - BFS, A*, DFS vs reference on cyclic maze seed=9
+  ---
+  duration_ms: 1.793408
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=10
+ok 37 - BFS, A*, DFS vs reference on cyclic maze seed=10
+  ---
+  duration_ms: 2.791851
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=11
+ok 38 - BFS, A*, DFS vs reference on cyclic maze seed=11
+  ---
+  duration_ms: 1.59696
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=12
+ok 39 - BFS, A*, DFS vs reference on cyclic maze seed=12
+  ---
+  duration_ms: 1.35564
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=13
+ok 40 - BFS, A*, DFS vs reference on cyclic maze seed=13
+  ---
+  duration_ms: 1.280367
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=14
+ok 41 - BFS, A*, DFS vs reference on cyclic maze seed=14
+  ---
+  duration_ms: 1.571724
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=15
+ok 42 - BFS, A*, DFS vs reference on cyclic maze seed=15
+  ---
+  duration_ms: 1.047031
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=16
+ok 43 - BFS, A*, DFS vs reference on cyclic maze seed=16
+  ---
+  duration_ms: 1.068376
+  type: 'test'
+  ...
+# Subtest: BFS, A*, DFS vs reference on cyclic maze seed=17
+ok 44 - BFS, A*, DFS vs reference on cyclic maze seed=17
+  ---
+  duration_ms: 2.888538
+  type: 'test'
+  ...
+# Subtest: bfs reports an isolated start as unreachable
+ok 45 - bfs reports an isolated start as unreachable
+  ---
+  duration_ms: 0.335072
+  type: 'test'
+  ...
+# Subtest: bfs supports source==target, zero steps
+ok 46 - bfs supports source==target, zero steps
+  ---
+  duration_ms: 0.391339
+  type: 'test'
+  ...
+# Subtest: bfs can search from the player's current cell
+ok 47 - bfs can search from the player's current cell
+  ---
+  duration_ms: 0.165633
+  type: 'test'
+  ...
+# Subtest: astar reports an isolated start as unreachable
+ok 48 - astar reports an isolated start as unreachable
+  ---
+  duration_ms: 0.082076
+  type: 'test'
+  ...
+# Subtest: astar supports source==target, zero steps
+ok 49 - astar supports source==target, zero steps
+  ---
+  duration_ms: 0.168658
+  type: 'test'
+  ...
+# Subtest: astar can search from the player's current cell
+ok 50 - astar can search from the player's current cell
+  ---
+  duration_ms: 0.156379
+  type: 'test'
+  ...
+# Subtest: dfs reports an isolated start as unreachable
+ok 51 - dfs reports an isolated start as unreachable
+  ---
+  duration_ms: 0.223873
+  type: 'test'
+  ...
+# Subtest: dfs supports source==target, zero steps
+ok 52 - dfs supports source==target, zero steps
+  ---
+  duration_ms: 0.121932
+  type: 'test'
+  ...
+# Subtest: dfs can search from the player's current cell
+ok 53 - dfs can search from the player's current cell
+  ---
+  duration_ms: 0.257515
+  type: 'test'
+  ...
+# Subtest: Search rejects unknown algorithm and out-of-range endpoints
+ok 54 - Search rejects unknown algorithm and out-of-range endpoints
+  ---
+  duration_ms: 0.534012
+  type: 'test'
+  ...
+# Subtest: An A* step expands exactly one actual vertex
+ok 55 - An A* step expands exactly one actual vertex
+  ---
+  duration_ms: 9.742505
+  type: 'test'
+  ...
+# Subtest: JSON roundtrip preserves generated and edited maps
+ok 56 - JSON roundtrip preserves generated and edited maps
+  ---
+  duration_ms: 4.788934
+  type: 'test'
+  ...
+# Subtest: Valid disconnected JSON is accepted, not repaired
+ok 57 - Valid disconnected JSON is accepted, not repaired
+  ---
+  duration_ms: 0.749207
+  type: 'test'
+  ...
+# Subtest: Reject JSON: schema
+ok 58 - Reject JSON: schema
+  ---
+  duration_ms: 0.231039
+  type: 'test'
+  ...
+# Subtest: Reject JSON: version
+ok 59 - Reject JSON: version
+  ---
+  duration_ms: 0.352806
+  type: 'test'
+  ...
+# Subtest: Reject JSON: width
+ok 60 - Reject JSON: width
+  ---
+  duration_ms: 0.750411
+  type: 'test'
+  ...
+# Subtest: Reject JSON: array length
+ok 61 - Reject JSON: array length
+  ---
+  duration_ms: 0.690679
+  type: 'test'
+  ...
+# Subtest: Reject JSON: wall value
+ok 62 - Reject JSON: wall value
+  ---
+  duration_ms: 0.187055
+  type: 'test'
+  ...
+# Subtest: Reject JSON: fractional wall
+ok 63 - Reject JSON: fractional wall
+  ---
+  duration_ms: 0.136338
+  type: 'test'
+  ...
+# Subtest: Reject JSON: string wall
+ok 64 - Reject JSON: string wall
+  ---
+  duration_ms: 0.31219
+  type: 'test'
+  ...
+# Subtest: Reject JSON: same endpoints
+ok 65 - Reject JSON: same endpoints
+  ---
+  duration_ms: 0.350709
+  type: 'test'
+  ...
+# Subtest: Reject JSON: endpoint range
+ok 66 - Reject JSON: endpoint range
+  ---
+  duration_ms: 0.133836
+  type: 'test'
+  ...
+# Subtest: Reject JSON: seed length
+ok 67 - Reject JSON: seed length
+  ---
+  duration_ms: 0.201563
+  type: 'test'
+  ...
+# Subtest: Reject JSON: seed type
+ok 68 - Reject JSON: seed type
+  ---
+  duration_ms: 0.223567
+  type: 'test'
+  ...
+# Subtest: Reject JSON: loops range
+ok 69 - Reject JSON: loops range
+  ---
+  duration_ms: 0.309469
+  type: 'test'
+  ...
+# Subtest: Reject JSON: outer boundary
+ok 70 - Reject JSON: outer boundary
+  ---
+  duration_ms: 0.237366
+  type: 'test'
+  ...
+# Subtest: Reject JSON: wall asymmetry
+ok 71 - Reject JSON: wall asymmetry
+  ---
+  duration_ms: 0.193601
+  type: 'test'
+  ...
+# Subtest: Reject malformed, null and oversized JSON
+ok 72 - Reject malformed, null and oversized JSON
+  ---
+  duration_ms: 2.908742
+  type: 'test'
+  ...
+# Subtest: Session manual moves respect walls, boundaries and counter
+ok 73 - Session manual moves respect walls, boundaries and counter
+  ---
+  duration_ms: 0.81788
+  type: 'test'
+  ...
+# Subtest: Session search pause, single-step and resume transitions
+ok 74 - Session search pause, single-step and resume transitions
+  ---
+  duration_ms: 0.462507
+  type: 'test'
+  ...
+# Subtest: Session autoplay can pause, single-step, resume, and reach goal
+ok 75 - Session autoplay can pause, single-step, resume, and reach goal
+  ---
+  duration_ms: 0.406373
+  type: 'test'
+  ...
+# Subtest: Search starts at current player position rather than original start
+ok 76 - Search starts at current player position rather than original start
+  ---
+  duration_ms: 0.156235
+  type: 'test'
+  ...
+# Subtest: Successful manual input invalidates stale path and paused search
+ok 77 - Successful manual input invalidates stale path and paused search
+  ---
+  duration_ms: 0.139459
+  type: 'test'
+  ...
+# Subtest: Manual goal completion and reset
+ok 78 - Manual goal completion and reset
+  ---
+  duration_ms: 0.677746
+  type: 'test'
+  ...
+# Subtest: Clear visualization preserves player and manual counter
+ok 79 - Clear visualization preserves player and manual counter
+  ---
+  duration_ms: 0.370385
+  type: 'test'
+  ...
+# Subtest: Load a new map resets all transient state
+ok 80 - Load a new map resets all transient state
+  ---
+  duration_ms: 0.497655
+  type: 'test'
+  ...
+# Subtest: Unreachable search does not enable autoplay
+ok 81 - Unreachable search does not enable autoplay
+  ---
+  duration_ms: 0.20341
+  type: 'test'
+  ...
+# Subtest: Already at goal can produce zero-length path and complete without movement
+ok 82 - Already at goal can produce zero-length path and complete without movement
+  ---
+  duration_ms: 0.213016
+  type: 'test'
+  ...
+# Subtest: Clock starts at 08:00 on day one with no consumed step
+ok 83 - Clock starts at 08:00 on day one with no consumed step
+  ---
+  duration_ms: 6.806126
+  type: 'test'
+  ...
+# Subtest: Fixed 30-minute increments
+ok 84 - Fixed 30-minute increments
+  ---
+  duration_ms: 0.225011
+  type: 'test'
+  ...
+# Subtest: Fixed 45-minute increments
+ok 85 - Fixed 45-minute increments
+  ---
+  duration_ms: 0.731396
+  type: 'test'
+  ...
+# Subtest: Fixed 60-minute increments
+ok 86 - Fixed 60-minute increments
+  ---
+  duration_ms: 0.842479
+  type: 'test'
+  ...
+# Subtest: Random boundary 0 -> 30 minutes
+ok 87 - Random boundary 0 -> 30 minutes
+  ---
+  duration_ms: 0.386762
+  type: 'test'
+  ...
+# Subtest: Random boundary 0.5 -> 45 minutes
+ok 88 - Random boundary 0.5 -> 45 minutes
+  ---
+  duration_ms: 0.092401
+  type: 'test'
+  ...
+# Subtest: Random boundary 0.999999 -> 60 minutes
+ok 89 - Random boundary 0.999999 -> 60 minutes
+  ---
+  duration_ms: 0.497705
+  type: 'test'
+  ...
+# Subtest: All 31 random minute values 30 through 60 are possible
+ok 90 - All 31 random minute values 30 through 60 are possible
+  ---
+  duration_ms: 2.274038
+  type: 'test'
+  ...
+# Subtest: Changing step mode does not move time
+ok 91 - Changing step mode does not move time
+  ---
+  duration_ms: 1.571985
+  type: 'test'
+  ...
+# Subtest: No movement: animation frames never create game time
+ok 92 - No movement: animation frames never create game time
+  ---
+  duration_ms: 1.284513
+  type: 'test'
+  ...
+# Subtest: 23:45 + 45 minutes wraps forward to day two 00:30
+ok 93 - 23:45 + 45 minutes wraps forward to day two 00:30
+  ---
+  duration_ms: 0.703182
+  type: 'test'
+  ...
+# Subtest: Full days are retained, not just HH:mm
+ok 94 - Full days are retained, not just HH:mm
+  ---
+  duration_ms: 1.006505
+  type: 'test'
+  ...
+# Subtest: Reduced-motion snaps lighting to committed time
+ok 95 - Reduced-motion snaps lighting to committed time
+  ---
+  duration_ms: 1.310763
+  type: 'test'
+  ...
+# Subtest: Smooth lighting is frame-rate independent for equal elapsed duration
+ok 96 - Smooth lighting is frame-rate independent for equal elapsed duration
+  ---
+  duration_ms: 0.282694
+  type: 'test'
+  ...
+# Subtest: Reset restores day one without changing preferences
+ok 97 - Reset restores day one without changing preferences
+  ---
+  duration_ms: 0.910552
+  type: 'test'
+  ...
+# Subtest: Manual successful transition consumes exactly one clock step
+ok 98 - Manual successful transition consumes exactly one clock step
+  ---
+  duration_ms: 2.007515
+  type: 'test'
+  ...
+# Subtest: Walking into either exterior wall consumes no time
+ok 99 - Walking into either exterior wall consumes no time
+  ---
+  duration_ms: 0.657789
+  type: 'test'
+  ...
+# Subtest: Solver iterations do not consume world time
+ok 100 - Solver iterations do not consume world time
+  ---
+  duration_ms: 5.581052
+  type: 'test'
+  ...
+# Subtest: Rejected input during a running search consumes no time
+ok 101 - Rejected input during a running search consumes no time
+  ---
+  duration_ms: 0.289603
+  type: 'test'
+  ...
+# Subtest: Auto-walking advances the same clock once per traversed edge
+ok 102 - Auto-walking advances the same clock once per traversed edge
+  ---
+  duration_ms: 1.909596
+  type: 'test'
+  ...
+# Subtest: Starting or pausing traversal does not itself cost time
+ok 103 - Starting or pausing traversal does not itself cost time
+  ---
+  duration_ms: 1.018178
+  type: 'test'
+  ...
+# Subtest: Single step while walking consumes one edge, not a solver expansion
+ok 104 - Single step while walking consumes one edge, not a solver expansion
+  ---
+  duration_ms: 1.588864
+  type: 'test'
+  ...
+# Subtest: Single-step search consumes no time
+ok 105 - Single-step search consumes no time
+  ---
+  duration_ms: 0.537132
+  type: 'test'
+  ...
+# Subtest: Finishing a zero-length path consumes no time
+ok 106 - Finishing a zero-length path consumes no time
+  ---
+  duration_ms: 0.179232
+  type: 'test'
+  ...
+# Subtest: Returning player to start keeps world time and step setting
+ok 107 - Returning player to start keeps world time and step setting
+  ---
+  duration_ms: 0.566882
+  type: 'test'
+  ...
+# Subtest: Editing / history can reload geometry without resetting time
+ok 108 - Editing / history can reload geometry without resetting time
+  ---
+  duration_ms: 0.35468
+  type: 'test'
+  ...
+# Subtest: Generating a new map resets time, preserving step duration
+ok 109 - Generating a new map resets time, preserving step duration
+  ---
+  duration_ms: 0.724999
+  type: 'test'
+  ...
+# Subtest: Sun and moon oppose each other at 0:00 with unit directions
+ok 110 - Sun and moon oppose each other at 0:00 with unit directions
+  ---
+  duration_ms: 0.379551
+  type: 'test'
+  ...
+# Subtest: Sun and moon oppose each other at 3:00 with unit directions
+ok 111 - Sun and moon oppose each other at 3:00 with unit directions
+  ---
+  duration_ms: 0.44397
+  type: 'test'
+  ...
+# Subtest: Sun and moon oppose each other at 6:00 with unit directions
+ok 112 - Sun and moon oppose each other at 6:00 with unit directions
+  ---
+  duration_ms: 1.649566
+  type: 'test'
+  ...
+# Subtest: Sun and moon oppose each other at 9:00 with unit directions
+ok 113 - Sun and moon oppose each other at 9:00 with unit directions
+  ---
+  duration_ms: 0.164967
+  type: 'test'
+  ...
+# Subtest: Sun and moon oppose each other at 12:00 with unit directions
+ok 114 - Sun and moon oppose each other at 12:00 with unit directions
+  ---
+  duration_ms: 0.065589
+  type: 'test'
+  ...
+# Subtest: Sun and moon oppose each other at 15:00 with unit directions
+ok 115 - Sun and moon oppose each other at 15:00 with unit directions
+  ---
+  duration_ms: 0.045082
+  type: 'test'
+  ...
+# Subtest: Sun and moon oppose each other at 18:00 with unit directions
+ok 116 - Sun and moon oppose each other at 18:00 with unit directions
+  ---
+  duration_ms: 0.206221
+  type: 'test'
+  ...
+# Subtest: Sun and moon oppose each other at 21:00 with unit directions
+ok 117 - Sun and moon oppose each other at 21:00 with unit directions
+  ---
+  duration_ms: 0.086366
+  type: 'test'
+  ...
+# Subtest: Sun and moon oppose each other at 24:00 with unit directions
+ok 118 - Sun and moon oppose each other at 24:00 with unit directions
+  ---
+  duration_ms: 0.04813
+  type: 'test'
+  ...
+# Subtest: At noon sunlight dominates and stars are hidden
+ok 119 - At noon sunlight dominates and stars are hidden
+  ---
+  duration_ms: 0.29219
+  type: 'test'
+  ...
+# Subtest: At midnight moonlight dominates and stars are visible
+ok 120 - At midnight moonlight dominates and stars are visible
+  ---
+  duration_ms: 0.155992
+  type: 'test'
+  ...
+# Subtest: Sky is periodic and continuous around midnight
+ok 121 - Sky is periodic and continuous around midnight
+  ---
+  duration_ms: 0.160089
+  type: 'test'
+  ...
+# Subtest: Phase label 4:00 -> night
+ok 122 - Phase label 4:00 -> night
+  ---
+  duration_ms: 0.074961
+  type: 'test'
+  ...
+# Subtest: Phase label 6:00 -> dawn
+ok 123 - Phase label 6:00 -> dawn
+  ---
+  duration_ms: 0.246725
+  type: 'test'
+  ...
+# Subtest: Phase label 8:00 -> day
+ok 124 - Phase label 8:00 -> day
+  ---
+  duration_ms: 0.043391
+  type: 'test'
+  ...
+# Subtest: Phase label 12:00 -> day
+ok 125 - Phase label 12:00 -> day
+  ---
+  duration_ms: 1.305469
+  type: 'test'
+  ...
+# Subtest: Phase label 18:00 -> dusk
+ok 126 - Phase label 18:00 -> dusk
+  ---
+  duration_ms: 0.59052
+  type: 'test'
+  ...
+# Subtest: Phase label 22:00 -> night
+ok 127 - Phase label 22:00 -> night
+  ---
+  duration_ms: 0.058592
+  type: 'test'
+  ...
+# Subtest: JSON clock roundtrip restores actual time and preferences
+ok 128 - JSON clock roundtrip restores actual time and preferences
+  ---
+  duration_ms: 1.240634
+  type: 'test'
+  ...
+# Subtest: Invalid saved clock is rejected: null
+ok 129 - Invalid saved clock is rejected: null
+  ---
+  duration_ms: 0.402129
+  type: 'test'
+  ...
+# Subtest: Invalid saved clock is rejected: {}
+ok 130 - Invalid saved clock is rejected: {}
+  ---
+  duration_ms: 0.068545
+  type: 'test'
+  ...
+# Subtest: Invalid saved clock is rejected: {"version":1,"totalMinutes":-1,"stepMode":"30","lantern":true}
+ok 131 - Invalid saved clock is rejected: {"version":1,"totalMinutes":-1,"stepMode":"30","lantern":true}
+  ---
+  duration_ms: 0.090315
+  type: 'test'
+  ...
+# Subtest: Invalid saved clock is rejected: {"version":1,"totalMinutes":1.5,"stepMode":"30","lantern":true}
+ok 132 - Invalid saved clock is rejected: {"version":1,"totalMinutes":1.5,"stepMode":"30","lantern":true}
+  ---
+  duration_ms: 0.051223
+  type: 'test'
+  ...
+# Subtest: Invalid saved clock is rejected: {"version":1,"totalMinutes":null,"stepMode":"30","lantern":true}
+ok 133 - Invalid saved clock is rejected: {"version":1,"totalMinutes":null,"stepMode":"30","lantern":true}
+  ---
+  duration_ms: 0.054176
+  type: 'test'
+  ...
+# Subtest: Invalid saved clock is rejected: {"version":1,"totalMinutes":480,"stepMode":"5","lantern":true}
+ok 134 - Invalid saved clock is rejected: {"version":1,"totalMinutes":480,"stepMode":"5","lantern":true}
+  ---
+  duration_ms: 0.349442
+  type: 'test'
+  ...
+# Subtest: Invalid saved clock is rejected: {"version":1,"totalMinutes":480,"stepMode":"30","lantern":"yes"}
+ok 135 - Invalid saved clock is rejected: {"version":1,"totalMinutes":480,"stepMode":"30","lantern":"yes"}
+  ---
+  duration_ms: 0.647956
+  type: 'test'
+  ...
+# Subtest: Invalid step duration 0 is rejected
+ok 136 - Invalid step duration 0 is rejected
+  ---
+  duration_ms: 0.132084
+  type: 'test'
+  ...
+# Subtest: Invalid step duration 75 is rejected
+ok 137 - Invalid step duration 75 is rejected
+  ---
+  duration_ms: 0.112394
+  type: 'test'
+  ...
+# Subtest: Invalid step duration NaN is rejected
+ok 138 - Invalid step duration NaN is rejected
+  ---
+  duration_ms: 0.214221
+  type: 'test'
+  ...
+# Subtest: Invalid step duration bogus is rejected
+ok 139 - Invalid step duration bogus is rejected
+  ---
+  duration_ms: 0.093912
+  type: 'test'
+  ...
+# Subtest: Invalid time -1 is rejected
+ok 140 - Invalid time -1 is rejected
+  ---
+  duration_ms: 0.091908
+  type: 'test'
+  ...
+# Subtest: Invalid time 1440 is rejected
+ok 141 - Invalid time 1440 is rejected
+  ---
+  duration_ms: 0.04967
+  type: 'test'
+  ...
+# Subtest: Invalid time NaN is rejected
+ok 142 - Invalid time NaN is rejected
+  ---
+  duration_ms: 1.1884
+  type: 'test'
+  ...
+# Subtest: Invalid time Infinity is rejected
+ok 143 - Invalid time Infinity is rejected
+  ---
+  duration_ms: 0.283589
+  type: 'test'
+  ...
+# Subtest: Invalid time 500.5 is rejected
+ok 144 - Invalid time 500.5 is rejected
+  ---
+  duration_ms: 0.065132
+  type: 'test'
+  ...
+# Subtest: Negative modulo helper wraps correctly
+ok 145 - Negative modulo helper wraps correctly
+  ---
+  duration_ms: 0.079365
+  type: 'test'
+  ...
+1..145
+# tests 145
+# suites 0
+# pass 145
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 528.553268

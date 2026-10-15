@@ -1,0 +1,1644 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10171f">
+  <meta name="description" content="Інтерактивний лабіринт: 2D/3D, пошук шляху, редактор та ручне проходження.">
+  <title>Maze Lab — лабіринт, день і ніч</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23141f28'/%3E%3Cpath d='M16 48V16h32v32H32V32h-8' fill='none' stroke='%236ce5c0' stroke-width='5' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <style>
+:root{color-scheme:dark;--bg:#10171f;--panel:#151e27;--panel2:#1b2732;--line:#293641;--text:#e9eff3;--muted:#91a1af;--muted2:#a6b4bf;--mint:#6ce5c0;--gold:#f1b96c;--radius:10px;font-family:Inter,"Segoe UI",Arial,sans-serif;font-synthesis:none}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-size:13px}button,input,select{font:inherit}button,a,input,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.38}button{transition:background .15s,border-color .15s,transform .15s}button:active:not(:disabled){transform:translateY(1px)}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,.viewport:focus-visible{outline:2px solid var(--mint);outline-offset:3px}[hidden]{display:none!important}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}i[data-icon]{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:17px;height:17px}i[data-icon] svg{width:100%;height:100%;display:block}button i{pointer-events:none}.app-header{height:76px;border-bottom:1px solid var(--line);padding:0 28px;display:flex;align-items:center;justify-content:space-between;gap:18px;background:#121b24}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);letter-spacing:1px;font-size:21px;font-weight:750;line-height:1.05}.brand-light{font-weight:380;color:var(--mint);margin-left:3px}.brand small{display:block;font-weight:500;font-size:8px;letter-spacing:2.15px;color:var(--muted);margin-top:6px}.brand-mark{width:39px;height:39px}.brand-mark rect{fill:#192c2d;stroke:#344b47}.brand-mark path{stroke:var(--mint);stroke-width:2;stroke-linejoin:round}.header-center{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}.live-dot{height:6px;width:6px;border-radius:50%;background:var(--mint);display:inline-block;flex-shrink:0}.header-actions{display:flex;align-items:center;gap:9px}.separator{height:22px;width:1px;background:var(--line);margin:0 3px}.button{display:inline-flex;gap:8px;align-items:center;justify-content:center;border:1px solid transparent;border-radius:7px;padding:10px 12px;min-height:39px;font-weight:550;white-space:nowrap;color:var(--text);background:transparent;font-size:12px}.button.primary{background:var(--mint);color:#0b2921;font-weight:700;box-shadow:0 3px 12px #6ce5c013}.button.primary:hover:not(:disabled){background:#8bedcf}.button.secondary{background:#21313b;border-color:#3a4d57}.button.secondary:hover:not(:disabled){background:#2a3d47;border-color:#607680}.button.quiet{color:var(--muted2)}.button.quiet:hover:not(:disabled){background:#ffffff09;color:var(--text)}.full-width{width:100%}.icon-button{display:inline-flex;justify-content:center;align-items:center;width:36px;height:36px;background:transparent;color:var(--muted2);border:0;border-radius:7px;flex-shrink:0}.icon-button:hover:not(:disabled){background:#ffffff0c;color:var(--text)}.icon-button.bordered{border:1px solid var(--line);background:#1b2630;height:38px;width:38px}.about-button{border:1px solid #40514c;width:33px;height:33px;border-radius:50%;color:#bce5d8;background:#21322d;font-weight:700;font-size:11px}.app-main{display:grid;grid-template-columns:302px minmax(0,1fr);height:calc(100dvh - 76px);min-height:640px}.sidebar{background:var(--panel);border-right:1px solid var(--line);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#36444e transparent;display:flex;flex-direction:column}.sidebar-section{padding:20px 23px;border-bottom:1px solid var(--line)}.sidebar-section.introduction{padding-top:24px;padding-bottom:22px}.eyebrow{display:block;color:var(--muted);font-size:9px;letter-spacing:1.55px;font-weight:650}.introduction .eyebrow{color:var(--mint);letter-spacing:1.35px;font-size:8px}h1{font-size:24px;line-height:1.32;font-weight:620;letter-spacing:-.65px;margin:13px 0 10px}.introduction p{color:var(--muted);line-height:1.6;font-size:12px;margin:0}.section-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:17px}.section-heading h2{font-size:12px;font-weight:650;margin:0;display:flex;align-items:center;gap:9px}.section-number{font-family:ui-monospace,monospace;color:#718591;font-size:10px;font-weight:450}.tag{font-size:8px;letter-spacing:.65px;background:#ffffff06;border:1px solid #3b4851;border-radius:4px;color:var(--muted2);padding:3px 5px;white-space:nowrap}.two-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px}.small-gap{gap:5px}.dimensions label{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:7px;font-size:11px;color:#c7d2da}.dimensions label span{font-size:9px;color:var(--muted)}input:not([type=range]),select{display:block;border:1px solid #35434e;border-radius:6px;background:#101923;color:var(--text);padding:9px 11px;width:100%;min-width:0;outline:none;height:37px;font-size:12px}input:not([type=range]):focus,select:focus{border-color:#69ad9c}input[type=number]{font-family:ui-monospace,monospace;font-size:14px}input[type=range]{display:block;width:100%;height:4px;padding:0;margin:12px 0 9px;accent-color:var(--mint);cursor:pointer}input[type=range]::-webkit-slider-thumb{cursor:ew-resize}.field-label{display:flex;align-items:center;gap:8px;justify-content:space-between;font-size:11px;margin:15px 0 7px}.field-label span{font-size:8px;color:var(--muted)}.input-with-button{display:flex;align-items:center;position:relative}.input-with-button input{padding-right:36px;font-family:ui-monospace,monospace;font-size:11px;color:#bfccd6}.input-with-button button{position:absolute;right:2px;top:1px;width:34px;height:34px}.range-label{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#c1cdd5;margin-top:17px}.range-label output{font:10px ui-monospace,monospace;color:var(--mint)}.range-endpoints{display:flex;justify-content:space-between;color:var(--muted);font-size:9px;margin:9px 0 17px}.algorithm-description{font-size:11px;line-height:1.55;color:var(--muted);min-height:33px;margin:9px 0 0}.simulation-buttons{display:grid;grid-template-columns:1fr 39px;gap:7px;margin:18px 0 7px}.simulation-buttons .icon-button{height:41px;width:39px}.simulation-buttons .button{height:41px;font-size:12px}.microcopy{font-size:9px;color:var(--muted);text-align:center;margin:10px 0 0}.segment{display:flex;background:#0f1821;border:1px solid #2b3944;padding:3px;border-radius:8px;gap:3px}.segment button{display:flex;align-items:center;justify-content:center;gap:7px;background:transparent;color:var(--muted);border:1px solid transparent;border-radius:5px;padding:7px 11px;font-size:11px}.segment button:hover:not(:disabled){color:var(--text)}.segment button.active{color:var(--mint);border-color:#3f5858;background:#24383b;box-shadow:0 1px 4px #0002}.mode-segment button{flex:1;padding:8px 6px;font-size:10px;gap:5px}.mode-segment i{width:14px;height:14px}.mode-description{font-size:10px;line-height:1.7;color:var(--muted);margin:11px 0}.button kbd{margin-left:auto;font-size:9px}kbd{display:inline-block;font:10px ui-monospace,monospace;border:1px solid #3c4a55;color:#bbc9d2;background:#202d36;border-radius:4px;padding:2px 4px;line-height:1.2;white-space:nowrap}.edit-tools{display:flex;gap:4px;margin-top:12px}.edit-tools button{display:flex;gap:5px;align-items:center;justify-content:center;padding:8px 6px;flex:1;border-radius:5px;border:1px solid #35434e;background:#19242e;color:var(--muted);font-size:10px}.edit-tools button.active{border-color:#75938b;color:var(--text);background:#2a3d3e}.edit-tools i{width:12px;height:12px}.sidebar-footer{margin-top:auto;padding:16px 23px;display:flex;align-items:center;gap:8px;color:var(--muted);font-size:9px;min-height:46px}.sidebar-footer .version{margin-left:auto;font-family:ui-monospace,monospace}.workspace{padding:22px 26px 24px;display:flex;flex-direction:column;overflow:hidden;min-width:0;min-height:0}.workspace-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;flex-shrink:0}.scene-heading .eyebrow{font-size:8px;letter-spacing:1.7px;margin-bottom:6px}.scene-heading h2{font-size:18px;letter-spacing:-.35px;margin:0;font-weight:550}.scene-heading h2>span{color:var(--gold)}.view-actions{display:flex;align-items:center;gap:9px}.camera-segment button{min-width:68px;min-height:28px}.camera-segment i{height:14px;width:14px}.viewport{position:relative;flex:1;min-height:300px;border:1px solid #2d3b45;border-radius:11px;background:#101a23;overflow:hidden;outline:none;isolation:isolate}.viewport>canvas.scene-canvas{display:block;width:100%;height:100%;position:absolute;inset:0;z-index:0;touch-action:none}.viewport-top{position:absolute;top:17px;left:18px;right:18px;display:flex;justify-content:space-between;gap:10px;pointer-events:none;z-index:2}.scene-chip{background:#17222ddb;border:1px solid #3d4c554f;color:#bed0db;display:flex;align-items:center;gap:7px;font-size:8px;letter-spacing:1px;padding:7px 9px;border-radius:5px;backdrop-filter:blur(8px)}.seed-chip{font-family:ui-monospace,monospace;font-size:9px;letter-spacing:.3px;color:#93a8b8;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}.tiny-dot{display:inline-block;width:6px;height:6px;flex-shrink:0;border-radius:2px}.mint{background:var(--mint)}.gold{background:var(--gold)}.status-card{position:absolute;top:60px;left:18px;z-index:2;display:flex;align-items:center;gap:9px;pointer-events:none;background:#111c23d9;border:1px solid #394e565e;border-radius:8px;padding:10px 12px;max-width:calc(100% - 36px);box-shadow:0 6px 15px #0001}.status-symbol{display:flex;align-items:center;justify-content:center;width:28px;height:28px;background:#203d37;color:var(--mint);border-radius:50%;flex-shrink:0}.status-card strong{font-size:11px;font-weight:550}.status-card p{font-size:9px;color:#a1b3be;line-height:1.4;margin:3px 0 0}.status-card[data-state=unreachable] .status-symbol{color:#ffc395;background:#50362c}.status-card[data-state=won]{border-color:#6ce5c070}.viewport-bottom{position:absolute;bottom:16px;left:18px;right:18px;display:flex;justify-content:space-between;gap:8px;z-index:2;pointer-events:none;color:#93a8b6}.viewport-help{display:flex;align-items:center;gap:7px;font-size:9px;background:#101921d6;padding:5px 7px;border-radius:4px}.viewport-help i{width:13px;height:13px}.coordinate{font:9px ui-monospace,monospace;letter-spacing:.5px;background:#101921d6;padding:5px 7px;align-self:center}.minimap-panel{position:absolute;z-index:2;right:17px;bottom:53px;width:136px;padding:9px;background:#111b25e8;border:1px solid #384752;border-radius:8px;pointer-events:none;box-shadow:0 5px 20px #0002}.minimap-panel>span{display:flex;justify-content:space-between;font-size:6px;letter-spacing:1px;color:var(--muted);margin-bottom:6px}.minimap-panel b{font-weight:500;color:var(--mint)}#minimap{width:100%;height:auto;display:block}.dpad{position:absolute;z-index:2;left:18px;bottom:56px;display:grid;grid-template-columns:29px 29px 29px;grid-template-rows:28px 28px;gap:3px;opacity:.77}.dpad button{background:#1a2833d9;border:1px solid #42535e;border-radius:5px;color:#d9e4ea;font-size:17px;padding:0}.dpad button:hover{background:#355347;color:var(--mint)}.dpad-up{grid-area:1/2}.dpad-left{grid-area:2/1}.dpad-down{grid-area:2/2}.dpad-right{grid-area:2/3}.scene-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 1px 18px;flex-shrink:0}.legend{display:flex;flex-wrap:wrap;align-items:center;gap:17px;color:var(--muted);font-size:9px}.legend>span{display:flex;align-items:center;gap:6px}.legend-dot{display:block;width:6px;height:6px;border-radius:2px}.legend-dot.player{background:#f8f3d5;border-radius:50%}.legend-dot.frontier{background:var(--mint)}.legend-dot.visited{background:#497d9c}.legend-dot.path{background:var(--gold)}.shortcuts{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--muted)}.shortcuts kbd{font-size:8px;padding:2px 4px}.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;flex-shrink:0}.stat{border:1px solid var(--line);border-radius:9px;background:#16202a;padding:16px 17px 14px;min-width:0}.stat>span{display:block;color:var(--muted);letter-spacing:1px;font-size:8px;font-weight:550;white-space:nowrap}.stat>strong{display:block;font-weight:500;font-size:28px;letter-spacing:-.65px;margin:8px 0 8px;line-height:1.15;white-space:nowrap;font-variant-numeric:tabular-nums}.stat strong small{font-size:10px;letter-spacing:0;color:var(--muted);font-weight:400;margin-left:8px}.stat:nth-child(2)>strong{color:var(--mint)}.stat:nth-child(3)>strong{color:var(--gold)}.stat-foot{font-size:8px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.progress-track{height:3px;background:#2b3e45;border-radius:4px;margin-top:16px;margin-bottom:5px;overflow:hidden}.progress-track span{display:block;width:0;height:100%;background:var(--mint);transition:width .12s}.load-note{position:absolute;top:115px;left:18px;max-width:330px;font-size:10px;line-height:1.5;color:#e8c38b;background:#292820ed;border:1px solid #685c38;border-radius:6px;padding:8px 11px;z-index:3;pointer-events:none}.toast{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);padding:10px 15px;background:#263b36f2;border:1px solid #73b9a3;border-radius:7px;color:#e5fff7;z-index:5;box-shadow:0 10px 30px #0005;font-size:11px;text-align:center;width:max-content;max-width:calc(100% - 24px)}.toast.error{border-color:#c19b65;background:#3d3025;color:#ffe0b4}dialog{background:#17232d;border:1px solid #455761;color:var(--text);border-radius:14px;padding:30px;width:min(740px,calc(100vw - 34px));max-height:85dvh;box-shadow:0 28px 100px #0008;overflow:auto}dialog::backdrop{background:#071017c9;backdrop-filter:blur(5px)}dialog h2{font-size:27px;letter-spacing:-.8px;font-weight:550;margin:10px 0 22px}dialog h3{font-size:13px;font-weight:600;color:#d9ede5;margin:0 0 8px}dialog p{font-size:12px;color:#acbcc7;line-height:1.75}.dialog-close{position:absolute;right:13px;top:11px;font-size:24px}.help-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 26px}.help-grid p{margin:0}.help-shortcuts{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0 10px;font-size:10px;color:var(--muted2)}.help-shortcuts span{display:flex;gap:6px;align-items:center}.dialog-note{border-top:1px solid var(--line);padding-top:15px;margin-top:20px;font-size:10px!important}.about-subtitle{color:var(--mint)}#about-details{display:grid;grid-template-columns:100px 1fr;gap:11px;font-size:12px;line-height:1.5}#about-details dt{color:var(--muted)}#about-details dd{margin:0}#about-dialog{max-width:570px}.noscript{position:fixed;inset:0;background:var(--bg);z-index:100;display:grid;place-items:center;font-size:20px}
+@media(min-height:960px){.sidebar-section{padding-top:24px;padding-bottom:24px}.sidebar-section.introduction{padding-top:31px;padding-bottom:28px}.workspace{padding-top:27px;padding-bottom:27px}.workspace-toolbar{margin-bottom:24px}.stat{padding-top:20px;padding-bottom:18px}}
+@media(max-width:1180px){.header-center{display:none}.app-main{grid-template-columns:281px minmax(0,1fr)}.sidebar-section{padding-left:19px;padding-right:19px}.workspace{padding-left:18px;padding-right:18px}.stat{padding:13px 12px}.stat>span{font-size:7px;letter-spacing:.7px}.stat strong small{font-size:9px;margin-left:5px}.shortcuts{display:none}.legend{gap:15px}.field-label span{font-size:7px}}
+@media(max-width:900px){.app-header{padding:0 18px}.app-main{grid-template-columns:263px minmax(0,1fr)}.sidebar-section{padding:18px 16px}.workspace{padding:18px 14px}.view-actions{gap:6px}.view-actions #screenshot-btn{display:none}.camera-segment button{min-width:53px;padding-left:7px;padding-right:7px}.scene-heading h2{font-size:16px}.stats-grid{gap:7px;grid-template-columns:repeat(2,1fr)}.stat{padding:11px 13px}.stat>strong{font-size:24px;margin:6px 0}.stat-foot{display:none}.progress-track{margin:6px 0 0;height:2px}.seed-chip{display:none}.legend{font-size:8px;gap:10px}.scene-footer{padding-bottom:13px}.minimap-panel{width:108px}.introduction h1{font-size:22px}.status-card p{max-width:215px}.status-card{padding:8px 9px}.status-card strong{font-size:10px}.viewport-help{max-width:245px;font-size:8px}.coordinate{display:none}}
+@media(max-width:700px){.app-header{height:64px;padding:0 13px;gap:8px}.brand{font-size:18px;gap:8px}.brand-mark{width:32px;height:32px}.brand small{font-size:6px;letter-spacing:1.7px}.header-actions{gap:3px}.header-actions .button span{display:none}.header-actions .button{padding:8px}.header-actions .separator{margin:0 1px}.app-main{height:auto;min-height:0;display:flex;flex-direction:column}.workspace{order:0;padding:17px 12px}.sidebar{order:1;border-right:0;border-top:1px solid var(--line);overflow:visible;display:grid;grid-template-columns:1fr 1fr}.introduction{display:none}.sidebar-section{min-width:0;border-right:1px solid var(--line);padding:20px 18px}.editor-section{grid-column:1/-1;max-width:100%}.editor-section .mode-segment{max-width:340px}.editor-section .edit-tools{max-width:360px}.sidebar-footer{grid-column:1/-1;padding:18px}.workspace-toolbar{margin-bottom:14px}.viewport{flex:auto;height:58dvh;min-height:360px;max-height:620px}.stats-grid{grid-template-columns:repeat(4,1fr);gap:6px}.stat{padding:11px 9px}.stat>span{font-size:6px;letter-spacing:.3px}.stat>strong{font-size:21px}.stat strong small{font-size:8px;display:block;margin:5px 0 0}.stat-foot{display:none}.stat .progress-track{display:none}.scene-footer{padding:11px 1px 13px}.legend{gap:14px;font-size:8px}.dpad{grid-template-columns:36px 36px 36px;grid-template-rows:33px 33px;gap:4px}.minimap-panel{width:105px}.viewport-top{top:12px;left:12px;right:12px}.status-card{top:48px;left:12px}.viewport-bottom{bottom:12px;left:12px;right:12px}.viewport-help{font-size:8px;max-width:285px}.help-grid{grid-template-columns:1fr}.help-shortcuts{gap:10px}dialog{padding:25px 21px}.field-label{align-items:flex-start}.field-label span{max-width:110px;text-align:right;font-size:7px;line-height:1.5}.dimensions{gap:10px}.dimensions label span{display:none}.range-label{font-size:10px}.range-label output{font-size:9px}.simulation-buttons .button{font-size:10px;padding:9px 6px}.section-heading{gap:6px}.section-heading h2{font-size:11px}.search-section .tag{display:none}.search-section .two-columns{grid-template-columns:1fr}.microcopy{font-size:8px}.algorithm-description{min-height:49px;font-size:10px}.range-endpoints{font-size:7px}.button{font-size:10px;padding:9px 8px}.load-note{top:100px;left:12px;font-size:9px;max-width:calc(100% - 24px)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+/* Keep core controls accessible on typical laptop screens; the sidebar remains scrollable. */
+@media(min-width:701px){.sidebar-section{padding-top:17px;padding-bottom:17px}.sidebar-section.introduction{padding-top:20px;padding-bottom:19px}.introduction h1{font-size:22px;line-height:1.24;margin-top:10px;margin-bottom:7px}.introduction p{font-size:11px;line-height:1.45}.section-heading{margin-bottom:13px}.algorithm-description{min-height:30px}.search-section .range-label{margin-top:12px}.simulation-buttons{margin-top:14px}.range-endpoints{margin-bottom:13px}.sidebar-footer{padding-top:12px;padding-bottom:12px}}
+@media(min-width:701px) and (max-height:850px){.sidebar-section.introduction{display:none}.sidebar-section{padding-top:14px;padding-bottom:14px}.section-heading{margin-bottom:10px}.mode-description{margin-top:8px;margin-bottom:6px}}
+/* Dependency warnings sit outside the scene so they never obscure a cell. */
+.workspace > .load-note{position:static;max-width:none;margin:0 0 10px;flex-shrink:0;pointer-events:auto;padding:8px 11px}
+/* Step-driven atmosphere controls: always next to the scene, never in its way. */
+.world-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 16px;border:1px solid #354550;border-radius:10px;background:linear-gradient(115deg,#203139,#18222f);margin-bottom:13px;flex-shrink:0;position:relative;z-index:6;min-height:94px;--time-accent:#ffd390;transition:background .5s,border-color .5s}.world-bar[data-phase=night]{background:linear-gradient(115deg,#1c2740,#151d2c);border-color:#344560;--time-accent:#bdceff}.world-bar[data-phase=dusk],.world-bar[data-phase=dawn]{background:linear-gradient(115deg,#3a2c35,#232436);--time-accent:#ffbd92}.world-readout{display:flex;align-items:center;gap:13px;flex-shrink:0}.world-weather{display:flex;align-items:center;justify-content:center;width:42px;height:42px;background:#ffffff06;border:1px solid #ffffff0a;border-radius:50%;font-size:30px;color:var(--time-accent);font-family:Arial,sans-serif}.world-readout #world-day{font-size:8px;letter-spacing:1.7px;color:var(--muted)}.clock-line{display:flex;align-items:center;gap:11px;margin:3px 0 4px}.clock-line time{font-size:29px;line-height:1.1;letter-spacing:-.7px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--time-accent)}#world-phase{font-size:10px;color:#cfdae4}.world-readout small{color:#97a9b9;font-size:8px}.world-actions{display:flex;align-items:flex-end;gap:8px}.step-time-field>span{display:block;margin:0 0 6px;font-size:7px;letter-spacing:1.2px;color:var(--muted)}.step-time-field select{width:179px;font-size:10px;height:34px}.world-actions .icon-button{width:34px;height:34px}.world-actions .icon-button svg{width:21px;height:21px}.world-actions .icon-button.active{color:var(--time-accent);border-color:#71624c;background:#473b252f}.orbit-clock{width:142px;height:66px;flex-shrink:1;min-width:85px}.orbit-clock path:not(#orbit-moon path){fill:none;stroke-width:1}.orbit-clock .orbit-day{stroke:#bfa378;stroke-dasharray:3 4}.orbit-clock .orbit-night{stroke:#677ea4;stroke-dasharray:2 4;opacity:.5}.orbit-clock .orbit-horizon{stroke:#4b5d70}.orbit-clock text{fill:#8fa3b6;font:7px ui-monospace,monospace}.time-settings summary{list-style:none;height:34px;min-height:34px;font-size:10px;padding:8px 10px;user-select:none;cursor:pointer}.time-settings summary::-webkit-details-marker{display:none}.time-settings summary:focus-visible{outline:2px solid var(--mint);outline-offset:3px}.time-popover{position:absolute;right:0;top:calc(100% + 8px);width:298px;padding:17px;background:#192531;border:1px solid #475765;border-radius:10px;box-shadow:0 18px 48px #0008;z-index:8}.time-popover>p{font-size:10px;color:var(--muted);line-height:1.55;margin:9px 0 13px}.time-presets{display:grid;grid-template-columns:1fr 1fr;gap:7px}.time-presets button{border:1px solid #3d4e60;border-radius:6px;background:#213140;color:#deebf2;padding:9px 5px;font-size:10px}.time-presets button:hover{border-color:#b99b70;color:#ffdcab}.time-popover input[type=range]{margin-top:18px;accent-color:var(--time-accent)}.time-scale{display:flex;justify-content:space-between;font:8px ui-monospace,monospace;color:var(--muted);margin-bottom:14px}.set-time-row{display:flex;gap:8px}.set-time-row input{color-scheme:dark;font-size:14px}.time-popover #time-reset{margin-top:7px;font-size:9px}.world-help{margin-top:23px;padding-top:17px;border-top:1px solid var(--line)}
+@media(min-width:701px) and (max-width:1150px){.world-bar{padding:11px;gap:10px}.world-weather{display:none}.orbit-clock{width:100px;min-width:70px}.step-time-field select{width:157px}.clock-line{gap:7px}.clock-line time{font-size:25px}.world-actions{gap:6px}.world-readout{gap:8px}.world-readout small{font-size:7px}}
+@media(min-width:701px) and (max-width:950px){.orbit-clock{display:none}.world-bar{gap:8px}.world-actions{gap:5px}.step-time-field select{width:140px;font-size:9px}#world-phase{font-size:8px}}
+@media(max-width:700px){.world-bar{flex-wrap:wrap;padding:12px 13px;gap:9px;margin-bottom:11px}.world-readout{gap:11px}.orbit-clock{width:112px;flex-grow:0;margin-left:auto}.world-actions{flex-basis:100%;justify-content:flex-end;border-top:1px solid #ffffff0a;padding-top:10px}.step-time-field{flex-grow:1;display:flex;align-items:center;gap:10px}.step-time-field>span{font-size:7px;margin:0;line-height:1.4;max-width:50px}.step-time-field select{width:100%;max-width:190px;flex:1}.world-weather{width:35px;height:35px;font-size:26px}.clock-line time{font-size:27px}.world-actions .time-settings summary{min-width:58px}.time-popover{max-width:calc(100vw - 30px)}.workspace .viewport{min-height:340px;height:52dvh}.world-bar #world-phase{font-size:9px}}
+@media(max-width:370px){.world-weather{display:none}.orbit-clock{width:98px}.world-actions .step-time-field>span{display:none}}
+
+</style>
+  <script type="importmap">
+  {"imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+  }}
+  </script>
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="#" aria-label="Maze Lab, головна" id="brand-home">
+      <svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true"><rect x=".5" y=".5" width="35" height="35" rx="9"/><path d="M10 27V9h17v18h-9V17h-4"/></svg>
+      <span>MAZE<span class="brand-light">LAB</span><small>ЛАБОРАТОРІЯ ШЛЯХІВ</small></span>
+    </a>
+    <div class="header-center"><span class="live-dot"></span> Інтерактивна комп’ютерна графіка</div>
+    <nav class="header-actions" aria-label="Дії проєкту">
+      <button id="import-btn" class="button quiet" title="Відкрити карту JSON"><i data-icon="folder"></i><span>Відкрити</span></button>
+      <button id="export-btn" class="button quiet" title="Зберегти поточну карту як JSON"><i data-icon="download"></i><span>Зберегти</span></button>
+      <span class="separator"></span>
+      <button id="help-btn" class="icon-button" title="Керування і довідка" aria-label="Керування і довідка"><i data-icon="help"></i></button>
+      <button id="about-btn" class="about-button" title="Про проєкт">PG</button>
+    </nav>
+  </header>
+
+  <main class="app-main">
+    <aside class="sidebar" aria-label="Налаштування лабіринту">
+      <section class="sidebar-section introduction">
+        <span class="eyebrow">ДОСЛІДЖУЙ. БУДУЙ. ЗНАХОДЬ.</span>
+        <h1>Кожен лабіринт —<br>новий маршрут.</h1>
+        <p>Створи свій світ і подивись,<br>як алгоритми знаходять вихід.</p>
+      </section>
+      <section class="sidebar-section">
+        <div class="section-heading"><h2><span class="section-number">01</span> Генератор</h2><span class="tag">DFS</span></div>
+        <div class="two-columns dimensions">
+          <label for="width">Ширина <span>клітинок</span><input id="width" type="number" value="16" min="4" max="40" step="1" inputmode="numeric"></label>
+          <label for="height">Висота <span>клітинок</span><input id="height" type="number" value="16" min="4" max="40" step="1" inputmode="numeric"></label>
+        </div>
+        <label class="field-label" for="seed">Seed <span>той самий seed → та сама карта*</span></label>
+        <div class="input-with-button"><input id="seed" value="TUKE-2026" maxlength="64" spellcheck="false" autocomplete="off" aria-label="Seed генератора"><button id="random-seed" class="icon-button" title="Новий випадковий seed" aria-label="Новий випадковий seed"><i data-icon="shuffle"></i></button></div>
+        <div class="range-label"><label for="loops">Додаткові проходи</label><output id="loops-value" for="loops">8%</output></div>
+        <input id="loops" type="range" min="0" max="100" step="1" value="8">
+        <div class="range-endpoints"><span>Без циклів</span><span>Більше маршрутів</span></div>
+        <button id="generate-btn" class="button secondary full-width"><i data-icon="refresh"></i> Згенерувати лабіринт</button>
+      </section>
+      <section class="sidebar-section search-section">
+        <div class="section-heading"><h2><span class="section-number">02</span> Пошук шляху</h2><span class="tag" id="algorithm-badge">НАЙКОРОТШИЙ</span></div>
+        <label for="algorithm" class="sr-only">Алгоритм пошуку</label>
+        <select id="algorithm">
+          <option value="bfs">BFS · пошук у ширину</option>
+          <option value="astar">A* · евристичний пошук</option>
+          <option value="dfs">DFS · пошук у глибину</option>
+        </select>
+        <p class="algorithm-description" id="algorithm-description">Перевіряє клітинки шар за шаром. Знаходить найкоротший шлях.</p>
+        <div class="range-label"><label for="speed">Швидкість пошуку</label><output id="speed-value" for="speed">40 кроків/с</output></div>
+        <input id="speed" type="range" min="1" max="120" step="1" value="40">
+        <div class="simulation-buttons">
+          <button id="run-btn" class="button primary"><i data-icon="play"></i><span>Почати пошук</span></button>
+          <button id="step-btn" class="icon-button bordered" title="Один крок алгоритму або проходження (N)" aria-label="Один крок"><i data-icon="step"></i></button>
+        </div>
+        <div class="two-columns small-gap">
+          <button id="walk-btn" class="button secondary" disabled><i data-icon="route"></i> Пройти шлях</button>
+          <button id="clear-btn" class="button quiet"><i data-icon="erase"></i> Очистити</button>
+        </div>
+        <p class="microcopy">Пошук починається з позиції гравця.</p>
+      </section>
+      <section class="sidebar-section editor-section">
+        <div class="section-heading"><h2><span class="section-number">03</span> Режим взаємодії</h2></div>
+        <div class="segment mode-segment" role="group" aria-label="Режим взаємодії">
+          <button id="play-mode" class="active" aria-pressed="true"><i data-icon="gamepad"></i> Проходження</button>
+          <button id="edit-mode" aria-pressed="false"><i data-icon="edit"></i> Редактор</button>
+        </div>
+        <div id="play-controls">
+          <p class="mode-description">Керуй гравцем через <kbd>WASD</kbd> або <kbd>↑ ↓ ← →</kbd>.</p>
+          <button id="reset-player" class="button quiet full-width"><i data-icon="rewind"></i> Повернути на старт <kbd>R</kbd></button>
+        </div>
+        <div id="editor-controls" hidden>
+          <div class="edit-tools" role="group" aria-label="Інструмент редактора">
+            <button class="active" data-tool="wall" aria-pressed="true"><i data-icon="wall"></i> Стіна</button>
+            <button data-tool="start" aria-pressed="false"><span class="tiny-dot mint"></span> Старт</button>
+            <button data-tool="goal" aria-pressed="false"><span class="tiny-dot gold"></span> Фініш</button>
+          </div>
+          <p id="edit-hint" class="mode-description">Клік біля краю клітинки додає або прибирає стіну. Зовнішня межа захищена.</p>
+          <div class="two-columns small-gap"><button id="undo-btn" class="button quiet" disabled><i data-icon="undo"></i> Скасувати</button><button id="redo-btn" class="button quiet" disabled><i data-icon="redo"></i> Повторити</button></div>
+        </div>
+      </section>
+      <footer class="sidebar-footer"><span class="live-dot"></span><span id="engine-label">Підключення Three.js…</span><span class="version">v1.1</span></footer>
+    </aside>
+
+    <section class="workspace" aria-label="Інтерактивна сцена">
+      <div class="workspace-toolbar">
+        <div class="scene-heading"><span class="eyebrow">РОБОЧА СЦЕНА</span><h2 id="scene-title">Лабіринт 16 × 16 <span id="dirty-marker" hidden>•</span></h2></div>
+        <div class="view-actions">
+          <div class="segment camera-segment" role="group" aria-label="Камера">
+            <button id="camera-2d" aria-pressed="false"><i data-icon="grid"></i> 2D</button>
+            <button id="camera-3d" class="active" aria-pressed="true"><i data-icon="cube"></i> 3D</button>
+          </div>
+          <button id="fit-btn" class="icon-button bordered" title="Показати весь лабіринт (F)" aria-label="Показати весь лабіринт"><i data-icon="fit"></i></button>
+          <button id="screenshot-btn" class="icon-button bordered" title="Зберегти знімок сцени PNG" aria-label="Зберегти знімок сцени"><i data-icon="camera"></i></button>
+        </div>
+      </div>
+      <section class="world-bar" id="world-bar" data-phase="day" aria-label="Освітлення та ігровий час">
+        <div class="world-readout"><span class="world-weather" id="world-icon" aria-hidden="true">☀</span><div><span id="world-day">ДЕНЬ 01</span><div class="clock-line"><time id="world-time">08:00</time><span id="world-phase">День</span></div><small id="last-time-step">Час іде лише під час руху</small></div></div>
+        <svg class="orbit-clock" viewBox="0 0 168 85" aria-label="Положення сонця та місяця; нижня півдуга під горизонтом" role="img">
+          <path d="M16 45 A68 31 0 0 1 152 45" class="orbit-day"/><path d="M16 45 A68 31 0 0 0 152 45" class="orbit-night"/><path d="M8 45H160" class="orbit-horizon"/>
+          <text x="7" y="41">СХ</text><text x="75" y="10">НЕБО</text><text x="148" y="41">ЗХ</text><text x="55" y="84">ПІД ГОРИЗОНТОМ</text>
+          <g id="orbit-sun"><circle r="8" fill="#ffcb7b" fill-opacity=".15"/><circle r="4" fill="#ffd694"/></g>
+          <g id="orbit-moon"><circle r="7" fill="#b6caff" fill-opacity=".13"/><path d="M-1-4a4.5 4.5 0 1 0 4.5 6A4.6 4.6 0 0 1-1-4" fill="#bed6ff"/></g>
+        </svg>
+        <div class="world-actions"><label class="step-time-field" for="step-minutes"><span>1 КРОК ГРАВЦЯ</span><select id="step-minutes"><option value="random">30–60 хв · випадково</option><option value="30">30 хвилин</option><option value="45">45 хвилин</option><option value="60">60 хвилин</option></select></label>
+          <button id="lantern-btn" class="icon-button bordered active" aria-label="Нічний ліхтар" aria-pressed="true" title="Нічний ліхтар"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 3h8l-1 5H9L8 3Zm1 5v12h6V8M10 12h4M4 3 2 1m18 2 2-2M12 1V0"/></svg></button>
+          <details class="time-settings" id="time-settings"><summary class="button secondary" title="Встановити час та переглянути освітлення">Час <span aria-hidden="true">⌄</span></summary><div class="time-popover">
+            <div class="eyebrow">ПЕРЕГЛЯД ОСВІТЛЕННЯ</div><p>Вибір часу ставить автопроходження на паузу.</p>
+            <div class="time-presets"><button data-world-time="360">☀ Світанок</button><button data-world-time="720">☀ Полудень</button><button data-world-time="1080">◒ Захід</button><button data-world-time="0">☾ Ніч</button></div>
+            <label class="sr-only" for="time-scrubber">Час доби</label><input id="time-scrubber" type="range" min="0" max="1439" step="1" value="480"><div class="time-scale"><span>00:00</span><span>12:00</span><span>23:59</span></div>
+            <div class="set-time-row"><label for="time-input" class="sr-only">Встановити час</label><input id="time-input" type="time" value="08:00"><button id="time-apply" class="button secondary">Встановити</button></div>
+            <button id="time-reset" class="button quiet full-width">Скинути годинник · день 1, 08:00</button>
+          </div></details>
+        </div>
+      </section>
+      <div class="viewport" id="viewport" tabindex="0" aria-label="Лабіринт. WASD або стрілки — рух. Клавіша V — змінити камеру.">
+        <div class="viewport-top"><span class="scene-chip"><span class="tiny-dot mint"></span><span id="view-label">ПЕРСПЕКТИВНИЙ ВИГЛЯД</span></span><span class="scene-chip seed-chip" id="seed-chip">SEED / TUKE-2026</span></div>
+        <div class="status-card" id="status-card"><span class="status-symbol" id="status-symbol"><i data-icon="compass"></i></span><div><strong id="status-title">Готовий до дослідження</strong><p id="status-detail">Знайди вихід сам або запусти алгоритм.</p></div></div>
+        <div class="viewport-bottom"><div class="viewport-help" id="viewport-help"><i data-icon="mouse"></i><span>Тягни, щоб обертати · колесо — масштаб</span></div><div class="coordinate" id="coordinate">X 01 · Y 01</div></div>
+        <div class="minimap-panel" id="minimap-panel"><span>ВИГЛЯД ЗВЕРХУ <b>↑ N</b></span><canvas id="minimap" width="180" height="180" aria-label="Мінікарта з позицією гравця"></canvas></div>
+        <div class="dpad" role="group" aria-label="Рух гравця"><button data-move="0" class="dpad-up" aria-label="Рух на північ">↑</button><button data-move="3" class="dpad-left" aria-label="Рух на захід">←</button><button data-move="2" class="dpad-down" aria-label="Рух на південь">↓</button><button data-move="1" class="dpad-right" aria-label="Рух на схід">→</button></div>
+        <div id="load-note" class="load-note" hidden></div>
+        <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+      </div>
+      <div class="scene-footer">
+        <div class="legend" aria-label="Умовні позначення"><span><b class="legend-dot player"></b>Гравець</span><span><b class="legend-dot frontier"></b>Кандидати</span><span><b class="legend-dot visited"></b>Перевірені</span><span><b class="legend-dot path"></b>Маршрут</span></div>
+        <span class="shortcuts"><kbd>V</kbd> камера <kbd>Space</kbd> пауза</span>
+      </div>
+      <div class="stats-grid" aria-label="Статистика">
+        <article class="stat"><span>РОЗМІР КАРТИ</span><strong id="stat-size">256<small>клітинок</small></strong><div class="stat-foot">Простір для дослідження</div></article>
+        <article class="stat"><span>ПЕРЕВІРЕНО</span><strong id="stat-visited">0<small>/ 256</small></strong><div class="progress-track"><span id="search-progress"></span></div></article>
+        <article class="stat"><span>ДОВЖИНА ШЛЯХУ</span><strong id="stat-path">—<small>кроків</small></strong><div class="stat-foot" id="path-note">Ще не знайдено</div></article>
+        <article class="stat"><span>КРОКИ ГРАВЦЯ</span><strong id="stat-moves">0<small>кроків</small></strong><div class="stat-foot" id="frontier-note">Готовий до руху</div></article>
+      </div>
+    </section>
+  </main>
+  <input type="file" id="import-file" accept="application/json,.json" hidden>
+  <dialog id="help-dialog" aria-labelledby="help-title">
+    <form method="dialog"><button class="dialog-close icon-button" aria-label="Закрити">×</button></form>
+    <span class="eyebrow">ЯК ЦЕ ПРАЦЮЄ</span><h2 id="help-title">Твій шлях через лабіринт.</h2>
+    <div class="help-grid"><section><h3>Дві камери, одна сцена</h3><p><b>2D</b> — ортографічний вигляд зверху: зручно читати карту й редагувати стіни. <b>3D</b> — перспективний вигляд з обертанням. Перемикання не скидає пошук або позицію гравця.</p></section><section><h3>Ручне проходження</h3><p><kbd>W / ↑</kbd> північ; <kbd>D / →</kbd> схід; <kbd>S / ↓</kbd> південь; <kbd>A / ←</kbd> захід. Напрямки прив’язані до карти, а не до повороту 3D-камери. Орієнтуйся за мінікартою.</p></section><section><h3>Алгоритми</h3><p><b>BFS</b> та <b>A*</b> знаходять найкоротший шлях, бо всі переходи тут мають однакову вартість. <b>DFS</b> знаходить будь-який шлях: він може бути довшим. Додаткові проходи створюють альтернативні маршрути.</p></section><section><h3>Редактор</h3><p>Обери «Стіна» і натисни біля межі двох клітинок. Для старту й фінішу натисни центр клітинки. Є скасування/повторення останніх 50 змін. Можна створити нерозв’язну карту — це коректний результат експерименту.</p></section></div>
+    <section class="world-help"><h3>День, ніч і час за кроками</h3><p>Кожен успішний перехід, ручний або автоматичний, додає 30–60 хвилин (або фіксовані 30 / 45 / 60). Пошук маршруту, спроби пройти крізь стіну й очікування час не змінюють. Сонце, місяць, тіні та освітлення плавно переходять до нового часу. Уночі вмикається ліхтар гравця. Нова карта починається о 08:00; клавіша R і редагування карти зберігають час. Меню «Час» дозволяє переглянути будь-яку пору доби. Це стилізований цикл, а не астрономічна модель.</p></section><div class="help-shortcuts"><span><kbd>V</kbd> камера</span><span><kbd>F</kbd> умістити карту</span><span><kbd>Space</kbd> пошук / пауза</span><span><kbd>N</kbd> один крок</span><span><kbd>R</kbd> на старт</span><span><kbd>Ctrl Z</kbd> скасувати</span></div>
+    <p class="dialog-note">* Відтворення генерації потребує однакових seed, ширини, висоти, частки додаткових проходів і версії генератора. Зміни редактора зберігаються лише в JSON. Знімок PNG містить сцену без панелей інтерфейсу.</p>
+  </dialog>
+  <dialog id="about-dialog" aria-labelledby="about-title">
+    <form method="dialog"><button class="dialog-close icon-button" aria-label="Закрити">×</button></form>
+    <span class="eyebrow">SEMESTRÁLNY PROJEKT</span><h2 id="about-title">Maze Lab</h2><p class="about-subtitle" id="about-project"></p>
+    <dl id="about-details"></dl><p class="dialog-note">Three.js · JavaScript · WebGL. Карту та налаштування не надсилаємо на сервер. Резервний режим Canvas 2D використовується, якщо Three.js або WebGL недоступні.</p>
+  </dialog>
+  <noscript><div class="noscript">Для роботи Maze Lab увімкни JavaScript у браузері.</div></noscript>
+  <script type="module">
+
+// ========== day-night.js ==========
+/**
+ * Maze Lab · step-driven world clock · v1.1.0
+ * Pure, renderer-independent game time. The sun/moon orbit is deliberately a
+ * stylised 24-hour model, NOT astronomy for a real location or calendar date.
+ */
+const DAY_MINUTES = 1440;
+const STEP_MODES = Object.freeze(['random', '30', '45', '60']);
+const wrapDay = value => ((value % DAY_MINUTES) + DAY_MINUTES) % DAY_MINUTES;
+const clamp01 = value => Math.max(0, Math.min(1, value));
+const smooth01 = (low, high, value) => {const t = clamp01((value - low) / (high - low)); return t * t * (3 - 2 * t);};
+
+function phaseAt(minutes) {
+  const h = wrapDay(minutes) / 60;
+  if (h >= 5 && h < 7) return {id: 'dawn', label: 'Світанок', icon: '☀'};
+  if (h >= 7 && h < 17) return {id: 'day', label: 'День', icon: '☀'};
+  if (h >= 17 && h < 19) return {id: 'dusk', label: 'Захід сонця', icon: '☀'};
+  return {id: 'night', label: 'Ніч', icon: '☾'};
+}
+
+/** One shared pose drives the 3D bodies, directional lights and clock diagram. */
+function skyStateAt(minutes) {
+  const hour = wrapDay(minutes) / 60;
+  const angle = (hour - 6) / 24 * Math.PI * 2;
+  const altitude = Math.sin(angle);
+  // A tilted circular orbit keeps the celestial body visible behind the maze.
+  const sun = [Math.cos(angle), altitude * .8, -altitude * .6];
+  const moon = sun.map(v => -v);
+  const daylight = smooth01(-.15, .35, altitude);
+  const twilight = (1 - smooth01(.04, .38, Math.abs(altitude))) * smooth01(-.22, .05, altitude);
+  const night = 1 - smooth01(-.3, .02, altitude);
+  return {hour, angle, altitude, sun, moon, daylight, twilight, night,
+    sunPower: 3.1 * smooth01(0, .32, altitude),
+    moonPower: .85 * smooth01(0, .3, -altitude),
+    phase: phaseAt(minutes)};
+}
+
+class WorldClock {
+  constructor({startMinutes = 480, stepMode = 'random', random = Math.random} = {}) {
+    if (!Number.isInteger(startMinutes) || startMinutes < 0 || startMinutes >= DAY_MINUTES) throw new RangeError('Некоректний початковий час.');
+    if (typeof random !== 'function') throw new TypeError('random має бути функцією.');
+    this.startMinutes = startMinutes; this.random = random; this.setStepMode(stepMode);
+    this.lantern = true; this.reset();
+  }
+  reset() {this.totalMinutes = this.startMinutes; this.visualMinutes = this.totalMinutes; this.lastStep = 0;}
+  setStepMode(mode) {
+    if (!STEP_MODES.includes(String(mode))) throw new RangeError('Крок часу: 30, 45, 60 або random.');
+    this.stepMode = String(mode);
+  }
+  advanceStep() {
+    const randomValue = this.stepMode === 'random' ? this.random() : 0;
+    if (!Number.isFinite(randomValue) || randomValue < 0 || randomValue >= 1) throw new RangeError('random має повертати число від 0 включно до 1 виключно.');
+    const delta = this.stepMode === 'random' ? 30 + Math.floor(randomValue * 31) : Number(this.stepMode);
+    this.totalMinutes += delta; this.lastStep = delta;
+    return delta;
+  }
+  /** Interpolate absolute minutes, so 23:45 -> 00:30 moves FORWARDS through midnight. */
+  update(dt, reducedMotion = false) {
+    if (reducedMotion) this.visualMinutes = this.totalMinutes;
+    else if (Number.isFinite(dt) && dt > 0) {
+      this.visualMinutes += (this.totalMinutes - this.visualMinutes) * (1 - Math.exp(-Math.min(dt, .25) * 9));
+      if (Math.abs(this.totalMinutes - this.visualMinutes) < .025) this.visualMinutes = this.totalMinutes;
+    }
+  }
+  setTimeOfDay(minutes) {
+    if (!Number.isInteger(minutes) || minutes < 0 || minutes >= DAY_MINUTES) throw new RangeError('Вкажи час від 00:00 до 23:59.');
+    // Explicit time selection is a preview/edit, not a player step; snap immediately.
+    this.totalMinutes = Math.floor(this.totalMinutes / DAY_MINUTES) * DAY_MINUTES + minutes;
+    this.visualMinutes = this.totalMinutes; this.lastStep = 0;
+  }
+  get timeOfDay() {return wrapDay(this.totalMinutes);}
+  get day() {return Math.floor(this.totalMinutes / DAY_MINUTES) + 1;}
+  get text() {return `${String(Math.floor(this.timeOfDay / 60)).padStart(2, '0')}:${String(this.timeOfDay % 60).padStart(2, '0')}`;}
+  get sky() {return skyStateAt(this.visualMinutes);}
+  snapshot() {return {version: 1, totalMinutes: this.totalMinutes, day: this.day, time: this.text, stepMode: this.stepMode, lastStep: this.lastStep, lantern: this.lantern, phase: phaseAt(this.totalMinutes).id};}
+  static validate(data) {
+    if (!data || typeof data !== 'object' || data.version !== 1 || !Number.isSafeInteger(data.totalMinutes) || data.totalMinutes < 0 || data.totalMinutes > 1_000_000_000 || !STEP_MODES.includes(data.stepMode) || typeof data.lantern !== 'boolean') throw new Error('Некоректні налаштування світла й часу у JSON.');
+    return {totalMinutes: data.totalMinutes, stepMode: data.stepMode, lantern: data.lantern};
+  }
+  restore(data) {
+    const saved = WorldClock.validate(data);
+    Object.assign(this, saved); this.visualMinutes = this.totalMinutes; this.lastStep = 0;
+  }
+}
+
+
+// ========== core.js ==========
+
+/**
+ * Maze Lab · graph model and algorithms · v1.0.0 · 2026-10-15
+ * Pure JavaScript: no DOM, WebGL, network or external dependencies.
+ * Author field for the submitted assignment is configured in src/config.js.
+ */
+const DIRS = Object.freeze([
+  Object.freeze({name: 'N', dx: 0, dy: -1, bit: 1, opposite: 4}),
+  Object.freeze({name: 'E', dx: 1, dy: 0, bit: 2, opposite: 8}),
+  Object.freeze({name: 'S', dx: 0, dy: 1, bit: 4, opposite: 1}),
+  Object.freeze({name: 'W', dx: -1, dy: 0, bit: 8, opposite: 2})
+]);
+const MAX_SIZE = 40;
+const ALGORITHMS = Object.freeze(['bfs', 'astar', 'dfs']);
+
+/** Reproducible FNV-1a hash followed by Mulberry32. Never use for cryptography. */
+function seededRandom(seed) {
+  let a = 2166136261;
+  for (const ch of String(seed)) a = Math.imul(a ^ ch.codePointAt(0), 16777619);
+  return () => {
+    a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function dimensions(width, height) {
+  if (![width, height].every(n => Number.isInteger(n) && n >= 4 && n <= MAX_SIZE)) {
+    throw new Error(`Розмір лабіринту має бути цілим числом від 4 до ${MAX_SIZE}.`);
+  }
+}
+
+/** O(V) iterative randomized DFS; optional loops add extra open edges. */
+function generateMaze(width = 16, height = 16, seed = 'TUKE-2026', loops = 0.08) {
+  dimensions(width, height);
+  if (typeof seed !== 'string' || seed.length > 64) throw new Error('Seed: максимум 64 символи.');
+  if (!Number.isFinite(loops) || loops < 0 || loops > 1) throw new Error('Частка циклів: від 0 до 1.');
+  const maze = {width, height, seed, loops, edited: false,
+    walls: new Uint8Array(width * height).fill(15), start: 0, goal: width * height - 1};
+  const rand = seededRandom(`${width}:${height}:${seed}`);
+  const seen = new Uint8Array(width * height);
+  const stack = [0]; seen[0] = 1;
+  while (stack.length) {
+    const current = stack[stack.length - 1];
+    const candidates = [];
+    for (let d = 0; d < 4; d++) {
+      const next = adjacent(maze, current, d);
+      if (next !== -1 && !seen[next]) candidates.push([next, d]);
+    }
+    if (!candidates.length) {stack.pop(); continue;}
+    const [next, d] = candidates[Math.floor(rand() * candidates.length)];
+    setWall(maze, current, d, false);
+    seen[next] = 1; stack.push(next);
+  }
+  if (loops > 0) {
+    for (let i = 0; i < maze.walls.length; i++) {
+      // Every internal edge is considered once; no boundary can be removed.
+      for (const d of [1, 2]) {
+        if (adjacent(maze, i, d) !== -1 && (maze.walls[i] & DIRS[d].bit) && rand() < loops) {
+          setWall(maze, i, d, false);
+        }
+      }
+    }
+  }
+  return maze;
+}
+
+/** Index of a grid neighbor, ignoring walls. -1 means outside the board. */
+function adjacent(maze, index, direction) {
+  if (!Number.isInteger(index) || index < 0 || index >= maze.walls.length || !DIRS[direction]) return -1;
+  const {dx, dy} = DIRS[direction];
+  const x = index % maze.width + dx;
+  const y = Math.floor(index / maze.width) + dy;
+  return x < 0 || y < 0 || x >= maze.width || y >= maze.height ? -1 : y * maze.width + x;
+}
+
+/** Changes BOTH sides of an edge. Exterior boundaries are intentionally immutable. */
+function setWall(maze, index, direction, closed) {
+  const next = adjacent(maze, index, direction);
+  if (next === -1) return false;
+  const d = DIRS[direction];
+  if (closed) {maze.walls[index] |= d.bit; maze.walls[next] |= d.opposite;}
+  else {maze.walls[index] &= ~d.bit; maze.walls[next] &= ~d.opposite;}
+  return true;
+}
+
+/** Returns all traversable neighbors in stable N/E/S/W order. */
+function neighbors(maze, index) {
+  const out = [];
+  for (let d = 0; d < 4; d++) {
+    if (maze.walls[index] & DIRS[d].bit) continue;
+    const next = adjacent(maze, index, d);
+    if (next !== -1) out.push(next);
+  }
+  return out;
+}
+
+function canMove(maze, index, direction) {
+  const next = adjacent(maze, index, direction);
+  return next !== -1 && !(maze.walls[index] & DIRS[direction].bit) ? next : -1;
+}
+
+function cloneMaze(maze) {
+  return {...maze, walls: new Uint8Array(maze.walls)};
+}
+
+function serializeMaze(maze) {
+  return JSON.stringify({schema: 'maze-lab', version: 1,
+    width: maze.width, height: maze.height, seed: maze.seed,
+    loops: maze.loops ?? 0, edited: Boolean(maze.edited),
+    start: maze.start, goal: maze.goal, walls: [...maze.walls]}, null, 2);
+}
+
+/** Validate untrusted JSON before allocating the scene or changing the existing map. */
+function parseMaze(text) {
+  if (typeof text !== 'string' || text.length > 100_000) throw new Error('Файл карти надто великий (максимум 100 КБ).');
+  let m;
+  try {m = JSON.parse(text);} catch {throw new Error('Файл не містить коректного JSON.');}
+  if (!m || m.schema !== 'maze-lab' || m.version !== 1) throw new Error('Невідомий формат карти. Потрібен Maze Lab JSON v1.');
+  dimensions(m.width, m.height);
+  const count = m.width * m.height;
+  if (!Array.isArray(m.walls) || m.walls.length !== count || !m.walls.every(n => Number.isInteger(n) && n >= 0 && n <= 15)) {
+    throw new Error('Пошкоджений масив стін.');
+  }
+  if (![m.start, m.goal].every(n => Number.isInteger(n) && n >= 0 && n < count) || m.start === m.goal) {
+    throw new Error('Старт і фініш мають бути різними клітинками всередині лабіринту.');
+  }
+  if (typeof m.seed !== 'string' || m.seed.length > 64) throw new Error('Некоректний seed.');
+  if (!Number.isFinite(m.loops) || m.loops < 0 || m.loops > 1) throw new Error('Некоректна частка циклів.');
+  const maze = {width: m.width, height: m.height, seed: m.seed, loops: m.loops,
+    edited: Boolean(m.edited), start: m.start, goal: m.goal, walls: Uint8Array.from(m.walls)};
+  for (let i = 0; i < count; i++) {
+    for (let d = 0; d < 4; d++) {
+      const next = adjacent(maze, i, d), closed = Boolean(maze.walls[i] & DIRS[d].bit);
+      if (next === -1 && !closed) throw new Error('Зовнішня межа лабіринту повинна бути закритою.');
+      if (next !== -1 && closed !== Boolean(maze.walls[next] & DIRS[d].opposite)) {
+        throw new Error('Стіни суміжних клітинок не узгоджені.');
+      }
+    }
+  }
+  // A disconnected map is VALID: the application visualizes "no path".
+  return maze;
+}
+
+/** Binary min-heap. Equal priorities preserve insertion order for reproducibility. */
+class MinHeap {
+  constructor() {this.items = []; this.serial = 0;}
+  less(a, b) {return a.priority < b.priority || (a.priority === b.priority && a.serial < b.serial);}
+  push(value, priority, g) {
+    const node = {value, priority, g, serial: this.serial++};
+    this.items.push(node); let i = this.items.length - 1;
+    while (i > 0) {
+      const p = (i - 1) >> 1;
+      if (!this.less(node, this.items[p])) break;
+      this.items[i] = this.items[p]; i = p;
+    }
+    this.items[i] = node;
+  }
+  pop() {
+    if (!this.items.length) return null;
+    const root = this.items[0], last = this.items.pop();
+    if (this.items.length) {
+      let i = 0;
+      while (i * 2 + 1 < this.items.length) {
+        let child = i * 2 + 1;
+        if (child + 1 < this.items.length && this.less(this.items[child + 1], this.items[child])) child++;
+        if (!this.less(this.items[child], last)) break;
+        this.items[i] = this.items[child]; i = child;
+      }
+      this.items[i] = last;
+    }
+    return root;
+  }
+}
+
+/**
+ * Incremental BFS, DFS and A*. One step expands at most ONE actual vertex.
+ * BFS uses an O(1) queue head (not Array.shift); A* uses a binary heap.
+ * All edges cost 1; Manhattan distance is admissible and consistent here.
+ */
+class Search {
+  constructor(maze, algorithm = 'bfs', source = maze.start, target = maze.goal) {
+    if (!ALGORITHMS.includes(algorithm)) throw new Error('Невідомий алгоритм.');
+    if (![source, target].every(i => Number.isInteger(i) && i >= 0 && i < maze.walls.length)) throw new Error('Некоректна початкова або кінцева клітинка.');
+    this.maze = maze; this.algorithm = algorithm; this.source = source; this.target = target;
+    const n = maze.walls.length;
+    this.parent = new Int32Array(n).fill(-1);
+    this.g = new Float64Array(n).fill(Infinity);
+    this.seen = new Uint8Array(n); this.closed = new Uint8Array(n);
+    this.frontier = 1; this.expanded = 0; this.done = false; this.found = false; this.path = [];
+    this.queue = [source]; this.head = 0; this.heap = new MinHeap();
+    this.g[source] = 0; this.seen[source] = 1;
+    this.heap.push(source, this.heuristic(source), 0);
+  }
+  heuristic(i) {
+    const w = this.maze.width;
+    return Math.abs(i % w - this.target % w) + Math.abs(Math.floor(i / w) - Math.floor(this.target / w));
+  }
+  reconstruct(node) {
+    const path = [];
+    while (node !== -1) {path.push(node); node = this.parent[node];}
+    return path.reverse();
+  }
+  step() {
+    if (this.done) return {done: true, found: this.found, node: -1, discovered: [], path: this.path};
+    let current = -1;
+    if (this.algorithm === 'astar') {
+      let entry;
+      while ((entry = this.heap.pop())) {
+        if (!this.closed[entry.value] && entry.g === this.g[entry.value]) {current = entry.value; break;}
+      }
+    } else if (this.algorithm === 'dfs') {
+      current = this.queue.length ? this.queue.pop() : -1;
+    } else if (this.head < this.queue.length) current = this.queue[this.head++];
+    if (current === -1) {
+      this.done = true; this.frontier = 0;
+      return {done: true, found: false, node: -1, discovered: [], path: []};
+    }
+    this.closed[current] = 1; this.frontier--; this.expanded++;
+    if (current === this.target) {
+      this.done = true; this.found = true; this.path = this.reconstruct(current);
+      return {done: true, found: true, node: current, discovered: [], path: this.path};
+    }
+    const discovered = [];
+    for (const next of neighbors(this.maze, current)) {
+      if (this.closed[next]) continue;
+      if (this.algorithm === 'astar') {
+        const tentative = this.g[current] + 1;
+        if (tentative >= this.g[next]) continue;
+        this.g[next] = tentative; this.parent[next] = current;
+        this.heap.push(next, tentative + this.heuristic(next), tentative);
+        if (!this.seen[next]) {this.seen[next] = 1; this.frontier++; discovered.push(next);}
+      } else if (!this.seen[next]) {
+        this.seen[next] = 1; this.parent[next] = current;
+        this.queue.push(next); this.frontier++; discovered.push(next);
+      }
+    }
+    if (!this.frontier) this.done = true;
+    return {done: this.done, found: false, node: current, discovered, path: []};
+  }
+}
+
+/**
+ * Application state machine, independent of animation/cameras.
+ * Camera switching deliberately cannot mutate this state.
+ * phase: idle, searching, search-paused, solved, unreachable,
+ *        walking, walk-paused, won.
+ */
+class Session {
+  constructor(maze) {this.clock = new WorldClock(); this.load(maze);}
+  load(maze, {resetClock = true} = {}) {
+    if (resetClock) this.clock.reset();
+    this.maze = maze; this.player = maze.start; this.moves = 0;
+    this.trail = new Set([maze.start]); this.clearSearch();
+  }
+  clearSearch() {
+    this.phase = 'idle'; this.search = null; this.path = [];
+    this.visual = new Uint8Array(this.maze.walls.length);
+    this.expanded = 0; this.frontier = 0; this.pathLength = null; this.walkIndex = 0;
+  }
+  resetPlayer() {
+    this.player = this.maze.start; this.moves = 0;
+    this.trail = new Set([this.player]); this.clearSearch();
+  }
+  beginSearch(algorithm = 'bfs') {
+    this.clearSearch();
+    this.search = new Search(this.maze, algorithm, this.player, this.maze.goal);
+    this.visual[this.player] = 1; this.frontier = 1; this.phase = 'searching';
+  }
+  advanceSearch() {
+    if (!this.search || this.search.done) return;
+    const event = this.search.step();
+    if (event.node >= 0) this.visual[event.node] = 2;
+    for (const index of event.discovered) this.visual[index] = 1;
+    this.expanded = this.search.expanded; this.frontier = this.search.frontier;
+    if (event.done) {
+      if (event.found) {
+        this.path = event.path; this.pathLength = this.path.length - 1;
+        for (const index of this.path) this.visual[index] = 3;
+        this.phase = 'solved';
+      } else this.phase = 'unreachable';
+    }
+  }
+  startWalking() {
+    if (this.phase !== 'solved' || !this.path.length || this.path[0] !== this.player) return false;
+    this.walkIndex = 0;
+    this.phase = this.path.length === 1 ? 'won' : 'walking';
+    return true;
+  }
+  advanceWalk() {
+    if (!['walking', 'walk-paused'].includes(this.phase)) return;
+    const next = this.path[this.walkIndex + 1];
+    if (next === undefined) {this.phase = 'won'; return;}
+    if (!neighbors(this.maze, this.player).includes(next)) {this.clearSearch(); return;}
+    this.player = next; this.moves++; this.clock.advanceStep(); this.trail.add(next); this.walkIndex++;
+    if (this.player === this.maze.goal) this.phase = 'won';
+  }
+  pause() {
+    if (this.phase === 'searching') this.phase = 'search-paused';
+    else if (this.phase === 'walking') this.phase = 'walk-paused';
+  }
+  resume() {
+    if (this.phase === 'search-paused') this.phase = 'searching';
+    else if (this.phase === 'walk-paused') this.phase = 'walking';
+  }
+  /** Manual input pauses nothing implicitly: active automatic tasks reject movement. */
+  move(direction) {
+    if (['searching', 'walking'].includes(this.phase)) return 'busy';
+    const next = canMove(this.maze, this.player, direction);
+    if (next === -1) return 'wall';
+    this.clearSearch(); this.player = next; this.moves++; this.clock.advanceStep(); this.trail.add(next);
+    if (next === this.maze.goal) this.phase = 'won';
+    return 'moved';
+  }
+  singleStep(algorithm = 'bfs') {
+    if (['walking', 'walk-paused'].includes(this.phase)) {
+      this.pause(); this.advanceWalk(); return;
+    }
+    if (!['searching', 'search-paused'].includes(this.phase)) this.beginSearch(algorithm);
+    this.pause(); this.advanceSearch();
+  }
+}
+
+
+// ========== config.js ==========
+/** Fill in your own details before submission. These are intentionally not guessed. */
+const PROJECT = Object.freeze({
+  title: 'Interaktívny generátor bludísk s vizualizáciou hľadania cesty',
+  author: 'Doplňte meno autora',
+  university: 'Technická univerzita v Košiciach',
+  faculty: 'Fakulta elektrotechniky a informatiky',
+  department: 'Katedra počítačov a informatiky',
+  course: 'Počítačová grafika',
+  year: '2026 / 2027',
+  version: '1.1.0'
+});
+
+
+// ========== icons.js ==========
+/** Small inline SVG icons; no icon font or external request. */
+const ICONS = {
+  folder: '<path d="M3 7V5h6l2 2h10v12H3Z"/><path d="M3 10h18"/>',
+  download: '<path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/>',
+  help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4m0 3h.01"/>',
+  shuffle: '<path d="M3 6h3c4 0 8 12 12 12h3m-4-4 4 4-4 4M3 18h3c2 0 3-2 4-4m4-4c1-2 2-4 4-4h3m-4-4 4 4-4 4"/>',
+  refresh: '<path d="M20 8a8 8 0 0 0-14-3L3 8m0-5v5h5M4 16a8 8 0 0 0 14 3l3-3m0 5v-5h-5"/>',
+  play: '<path d="m8 4 12 8-12 8Z"/>',
+  pause: '<path d="M8 4v16M16 4v16" stroke-width="3"/>',
+  step: '<path d="m5 4 10 8-10 8ZM19 4v16"/>',
+  route: '<circle cx="6" cy="5" r="2"/><circle cx="18" cy="19" r="2"/><path d="M8 5h8a4 4 0 0 1 0 8H8a3 3 0 0 0 0 6h8"/>',
+  erase: '<path d="m3 13 9-10 9 8-9 10H9Zm6-7 9 8M12 21h9"/>',
+  gamepad: '<path d="M7 6h10c3 0 5 10 3 12-2 2-5-3-5-3H9s-3 5-5 3C2 16 4 6 7 6Z"/><path d="M7 9v5m-2-2.5h4m6-1.5h.01m3 3h.01"/>',
+  edit: '<path d="m15 3 6 6-12 12H3v-6Zm-3 3 6 6M3 15l6 6"/>',
+  rewind: '<path d="M3 11 9 5m-6 6 6 6M3 11h10a7 7 0 0 1 7 7"/>',
+  wall: '<rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 10h18M3 15h18M12 4v6M8 10v5m8-5v5m-4 0v5"/>',
+  undo: '<path d="M3 10h11a6 6 0 0 1 0 12M3 10l5-5m-5 5 5 5"/>',
+  redo: '<path d="M21 10H10a6 6 0 0 0 0 12m11-12-5-5m5 5-5 5"/>',
+  grid: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',
+  cube: '<path d="m12 2 9 5v10l-9 5-9-5V7Zm0 10v10M3 7l9 5 9-5M7.5 4.5l9 5"/>',
+  fit: '<path d="M9 3H3v6m12-6h6v6M3 15v6h6m6 0h6v-6"/><rect x="8" y="8" width="8" height="8" rx="1"/>',
+  camera: '<path d="M3 7h4l2-3h6l2 3h4v13H3Z"/><circle cx="12" cy="13" r="4"/>',
+  compass: '<circle cx="12" cy="12" r="9"/><path d="m16 8-2 6-6 2 2-6Z"/>',
+  mouse: '<rect x="6" y="2" width="12" height="20" rx="6"/><path d="M12 2v7m-6 1h12"/>',
+  check: '<path d="m5 12 4 4L20 5"/>',
+  alert: '<path d="m12 3 10 18H2Zm0 6v5m0 3h.01"/>',
+  search: '<circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/>'
+};
+function icon(name) {
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ICONS.compass}</svg>`;
+}
+function fillIcons(root = document) {
+  root.querySelectorAll('[data-icon]').forEach(el => {el.innerHTML = icon(el.dataset.icon);});
+}
+
+
+// ========== environment.js ==========
+/**
+ * Maze Lab · animated sun, moon, sky and lighting · v1.1.0
+ * The model shares its orbit with WorldClock. All textures are generated locally.
+ * One dynamic directional shadow source per day/night phase. Local lanterns do
+ * not cast shadows, keeping the cost bounded even on a 40×40 maze.
+ */
+class DayNightEnvironment {
+  constructor(T, scene, renderer) {
+    this.T = T; this.scene = scene; this.renderer = renderer;
+    this.group = new T.Group(); this.group.name = 'Day / night'; scene.add(this.group);
+    this.hemi = new T.HemisphereLight(0xd7edff, 0x25323e, 1.5);
+    this.sun = this.makeLight(0xffe7bf); this.moon = this.makeLight(0xa6c8ff);
+    this.group.add(this.hemi, this.sun, this.sun.target, this.moon, this.moon.target);
+    this.tempColor = new T.Color(); this.dayTop = new T.Color('#448ac3'); this.nightTop = new T.Color('#050b20');
+    this.dayHorizon = new T.Color('#cadfea'); this.nightHorizon = new T.Color('#172945');
+    this.duskTop = new T.Color('#72517b'); this.duskHorizon = new T.Color('#f0a271');
+    this.daySkyLight = new T.Color('#dbecff'); this.nightSkyLight = new T.Color('#718bc7');
+    this.warm = new T.Color('#ffac65'); this.neutral = new T.Color('#fff0d4');
+    this.skyMaterial = new T.ShaderMaterial({side: T.BackSide, depthWrite: false, toneMapped: false,
+      uniforms: {topColor: {value: this.dayTop.clone()}, horizonColor: {value: this.dayHorizon.clone()}},
+      vertexShader: 'varying vec3 vDirection; void main(){vDirection=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+      fragmentShader: `varying vec3 vDirection; uniform vec3 topColor; uniform vec3 horizonColor;
+        void main(){float h=normalize(vDirection).y;float f=pow(max(h,0.0),0.6);
+          gl_FragColor=vec4(mix(horizonColor,topColor,f),1.0);
+          #include <colorspace_fragment>
+        }`
+    });
+    this.sky = new T.Mesh(new T.SphereGeometry(420, 28, 16), this.skyMaterial);
+    this.sky.frustumCulled = false; this.sky.renderOrder = -10; this.group.add(this.sky);
+    scene.background = null; scene.fog = new T.Fog(0xcadfea, 70, 190);
+    const glow = document.createElement('canvas'); glow.width = glow.height = 128;
+    const c = glow.getContext('2d'), g = c.createRadialGradient(64,64,0,64,64,64);
+    g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.22, 'rgba(255,255,255,.55)'); g.addColorStop(.6, 'rgba(255,255,255,.12)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+    c.fillStyle = g; c.fillRect(0,0,128,128); this.glowTexture = new T.CanvasTexture(glow);
+    this.sunBody = new T.Mesh(new T.SphereGeometry(1, 24, 16), new T.MeshBasicMaterial({color: 0xffedb5, toneMapped: false, fog: false}));
+    this.sunGlow = new T.Sprite(new T.SpriteMaterial({map: this.glowTexture, color: 0xffbb66, transparent: true, opacity: .5, blending: T.AdditiveBlending, depthWrite: false, toneMapped: false, fog: false}));
+    const moonCanvas = document.createElement('canvas'); moonCanvas.width = moonCanvas.height = 256;
+    const mc = moonCanvas.getContext('2d'); mc.fillStyle = '#d7e5f1'; mc.fillRect(0,0,256,256);
+    let seed = 48; const random = () => {seed = (Math.imul(1664525,seed)+1013904223)>>>0;return seed/4294967296;};
+    for(let i=0;i<60;i++){const x=random()*256,y=random()*256,r=3+random()*15;mc.fillStyle='rgba(81,106,134,.22)';mc.beginPath();mc.arc(x,y,r,0,Math.PI*2);mc.fill();mc.strokeStyle='rgba(249,253,255,.22)';mc.lineWidth=2;mc.stroke();}
+    this.moonTexture = new T.CanvasTexture(moonCanvas); this.moonTexture.colorSpace = T.SRGBColorSpace;
+    this.moonBody = new T.Mesh(new T.SphereGeometry(1, 24, 16), new T.MeshBasicMaterial({map: this.moonTexture, color: 0xc4ddff, toneMapped: false, fog: false}));
+    this.moonGlow = new T.Sprite(new T.SpriteMaterial({map: this.glowTexture, color: 0xa0bfff, transparent: true, opacity: .18, blending: T.AdditiveBlending, depthWrite: false, toneMapped: false, fog: false}));
+    this.group.add(this.sunBody, this.sunGlow, this.moonBody, this.moonGlow);
+    const points = new Float32Array(900 * 3);
+    for(let i=0;i<900;i++){const y=.08+random()*.92,a=random()*Math.PI*2,r=Math.sqrt(1-y*y);points.set([r*Math.cos(a)*330,y*330,r*Math.sin(a)*330],i*3);}
+    const geometry = new T.BufferGeometry(); geometry.setAttribute('position',new T.BufferAttribute(points,3));
+    this.stars = new T.Points(geometry, new T.PointsMaterial({color:0xcfe0ff,size:.55,sizeAttenuation:true,transparent:true,opacity:0,depthWrite:false,toneMapped:false,fog:false}));
+    this.group.add(this.stars); this.resize(16,16);
+  }
+  makeLight(color) {
+    const T = this.T, light = new T.DirectionalLight(color, 0);
+    light.castShadow = true; light.shadow.mapSize.set(2048,2048);
+    light.shadow.bias = -.0002; light.shadow.normalBias = .035;
+    light.shadow.camera.near = .1; light.shadow.camera.far = 250;
+    return light;
+  }
+  resize(width,height) {
+    const span = Math.max(width,height); this.orbitRadius = span*.62+1.2;
+    this.lightRadius = span*2+20;
+    const extent = Math.hypot(width,height)*.64+3;
+    for (const light of [this.sun,this.moon]) {
+      Object.assign(light.shadow.camera,{left:-extent,right:extent,top:extent,bottom:-extent,far:this.lightRadius*2.8});
+      light.shadow.camera.updateProjectionMatrix();
+    }
+    const r = .58+span*.021;
+    this.sunBody.scale.setScalar(r); this.moonBody.scale.setScalar(r*.88);
+    this.sunGlow.scale.setScalar(r*5.5); this.moonGlow.scale.setScalar(r*4.5);
+    this.scene.fog.near = span*3+32; this.scene.fog.far = span*9+100;
+  }
+  update(clock,camera,mode,time) {
+    const sky = clock.sky, {daylight:d,twilight:t,night:n} = sky;
+    this.lastState = sky;
+    this.sun.position.fromArray(sky.sun).multiplyScalar(this.lightRadius);
+    this.moon.position.fromArray(sky.moon).multiplyScalar(this.lightRadius);
+    this.sun.intensity = sky.sunPower; this.moon.intensity = sky.moonPower;
+    this.sun.visible = this.sun.intensity > .001; this.moon.visible = this.moon.intensity > .001;
+    this.sun.color.copy(this.warm).lerp(this.neutral,Math.max(0,sky.altitude));
+    this.hemi.intensity = .48 + d*1.05;
+    this.hemi.color.copy(this.nightSkyLight).lerp(this.daySkyLight,d);
+    this.hemi.groundColor.setHex(0x263140);
+    this.skyMaterial.uniforms.topColor.value.copy(this.nightTop).lerp(this.dayTop,d).lerp(this.duskTop,t*.6);
+    this.skyMaterial.uniforms.horizonColor.value.copy(this.nightHorizon).lerp(this.dayHorizon,d).lerp(this.duskHorizon,t*.85);
+    this.scene.fog.color.copy(this.skyMaterial.uniforms.horizonColor.value);
+    this.sky.position.copy(camera.position); this.stars.position.copy(camera.position);
+    this.stars.material.opacity = n*.92; this.stars.visible = mode==='3d' && n>.015;
+    this.sunBody.position.fromArray(sky.sun).multiplyScalar(this.orbitRadius);
+    this.moonBody.position.fromArray(sky.moon).multiplyScalar(this.orbitRadius);
+    this.sunGlow.position.copy(this.sunBody.position); this.moonGlow.position.copy(this.moonBody.position);
+    this.sunBody.visible = this.sunGlow.visible = mode==='3d' && sky.altitude>=-.035;
+    this.moonBody.visible = this.moonGlow.visible = mode==='3d' && sky.altitude<=.035;
+    this.sunBody.material.color.copy(this.warm).lerp(this.neutral,Math.max(0,sky.altitude));
+    this.moonBody.rotation.y = .4;
+    this.renderer.toneMappingExposure = 1.18;
+  }
+  snapshot() {
+    return {sunPosition:this.sun.position.toArray(),moonPosition:this.moon.position.toArray(),
+      sunIntensity:this.sun.intensity,moonIntensity:this.moon.intensity,ambientIntensity:this.hemi.intensity,
+      starsOpacity:this.stars.material.opacity,sunVisible:this.sunBody.visible,moonVisible:this.moonBody.visible};
+  }
+  dispose() {
+    this.scene.remove(this.group);
+    const materials=new Set(),geometries=new Set();
+    this.group.traverse(o=>{if(o.geometry)geometries.add(o.geometry);if(o.material)materials.add(o.material);});
+    for(const g of geometries)g.dispose();for(const m of materials)m.dispose();
+    this.glowTexture.dispose();this.moonTexture.dispose();this.sun.dispose();this.moon.dispose();this.scene.fog=null;
+  }
+}
+
+
+// ========== canvas-view.js ==========
+/**
+ * Optional, explicitly labelled 2D fallback when WebGL / Three.js cannot load.
+ * Not a fake 3D renderer. It keeps the editor and graph algorithms usable offline.
+ */
+/** RGB palette interpolation for the software-only view, not WebGL lighting. */
+function canvasBlend(a,b,t) {
+  const av=parseInt(a.slice(1),16), bv=parseInt(b.slice(1),16);
+  const channel=shift=>Math.round(((av>>shift)&255)*(1-t)+((bv>>shift)&255)*t);
+  return '#' + [channel(16),channel(8),channel(0)].map(n=>n.toString(16).padStart(2,'0')).join('');
+}
+class CanvasView {
+  constructor(host) {
+    this.host = host; this.mode = '2d'; this.supported3D = false;
+    this.canvas = document.createElement('canvas'); this.canvas.className = 'scene-canvas';
+    this.canvas.setAttribute('aria-hidden', 'true'); host.prepend(this.canvas);
+    this.ctx = this.canvas.getContext('2d'); this.maze = null; this.session = null;
+    this.zoom = 1; this.pan = {x: 0, y: 0}; this.editing = false; this.tool = 'wall';
+    this.hover = null; this.drag = null;
+    this.resizeObserver = new ResizeObserver(() => this.resize()); this.resizeObserver.observe(host);
+    this.onWheel = e => {
+      e.preventDefault(); this.zoom = Math.max(.4, Math.min(6, this.zoom * Math.exp(-e.deltaY * .001))); this.draw();
+    };
+    this.canvas.addEventListener('wheel', this.onWheel, {passive: false});
+    this.canvas.addEventListener('pointerdown', e => {
+      if (!this.editing || e.button === 2) {
+        this.drag = {x: e.clientX, y: e.clientY, panX: this.pan.x, panY: this.pan.y};
+        this.canvas.setPointerCapture(e.pointerId);
+      }
+    });
+    this.canvas.addEventListener('pointermove', e => {
+      if (!this.drag) return;
+      this.pan.x = this.drag.panX + e.clientX - this.drag.x;
+      this.pan.y = this.drag.panY + e.clientY - this.drag.y; this.draw();
+    });
+    this.canvas.addEventListener('pointerup', () => {this.drag = null;});
+    this.canvas.addEventListener('pointercancel', () => {this.drag = null;});
+    this.canvas.addEventListener('contextmenu', e => e.preventDefault());
+    this.resize();
+  }
+  resize() {
+    this.w = Math.max(1, this.host.clientWidth); this.h = Math.max(1, this.host.clientHeight);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.canvas.width = this.w * dpr; this.canvas.height = this.h * dpr;
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0); this.draw();
+  }
+  transform() {
+    if (!this.maze) return {scale: 1, ox: 0, oy: 0};
+    const scale = Math.max(1, Math.min((this.w - 80) / this.maze.width, (this.h - 110) / this.maze.height)) * this.zoom;
+    return {scale, ox: (this.w - this.maze.width * scale) / 2 + this.pan.x,
+      oy: (this.h - this.maze.height * scale) / 2 + this.pan.y + 10};
+  }
+  sync(session) {this.maze = session.maze; this.session = session; this.draw();}
+  setMode() {this.mode = '2d';}
+  fit() {this.pan = {x: 0, y: 0}; this.zoom = 1; this.draw();}
+  setEditing(editing, tool = 'wall') {this.editing = editing; this.tool = tool; this.canvas.style.cursor = editing ? 'crosshair' : 'grab'; this.setHover(null);}
+  setHover(hover) {this.hover = hover; this.draw();}
+  getPick(clientX, clientY) {
+    if (!this.maze) return null;
+    const r = this.canvas.getBoundingClientRect(), {scale, ox, oy} = this.transform();
+    const gx = (clientX - r.left - ox) / scale, gy = (clientY - r.top - oy) / scale;
+    const x = Math.floor(gx), y = Math.floor(gy);
+    if (x < 0 || y < 0 || x >= this.maze.width || y >= this.maze.height) return null;
+    const distances = [gy - y, 1 - (gx - x), 1 - (gy - y), gx - x];
+    return {index: y * this.maze.width + x, direction: distances.indexOf(Math.min(...distances)), x, y};
+  }
+  draw() {
+    if (!this.ctx || !this.w) return;
+    const c = this.ctx; c.clearRect(0, 0, this.w, this.h);
+    const atmosphere = this.session?.clock?.sky;
+    const daylight = atmosphere?.daylight ?? 1;
+    const background = c.createLinearGradient(0,0,0,this.h);
+    background.addColorStop(0,canvasBlend(canvasBlend('#080e22','#668fa7',daylight),'#ad7279',(atmosphere?.twilight??0)*.58));
+    background.addColorStop(1,canvasBlend(canvasBlend('#101b2c','#314956',daylight),'#453c58',(atmosphere?.twilight??0)*.38));
+    c.fillStyle = background; c.fillRect(0, 0, this.w, this.h);
+    if (atmosphere && atmosphere.night > .05) {
+      c.fillStyle = `rgba(202,220,255,${atmosphere.night*.6})`;
+      for(let i=0;i<95;i++){const x=((i*7919+23)%997)/997*this.w,y=((i*3571+71)%983)/983*this.h;c.fillRect(x,y,i%6===0?1.8:1,i%6===0?1.8:1);}
+    }
+    c.strokeStyle = canvasBlend('#1b2933','#46606e',daylight); c.lineWidth = .5;
+    for (let x = 0; x < this.w; x += 28) {c.beginPath(); c.moveTo(x, 0); c.lineTo(x, this.h); c.stroke();}
+    for (let y = 0; y < this.h; y += 28) {c.beginPath(); c.moveTo(0, y); c.lineTo(this.w, y); c.stroke();}
+    if (!this.maze || !this.session) return;
+    const {width: w, height: h} = this.maze, s = this.session;
+    const {scale: k, ox, oy} = this.transform();
+    c.save(); c.translate(ox, oy); c.scale(k, k);
+    c.fillStyle = canvasBlend('#222e44','#70808a',daylight); c.shadowColor = '#0006'; c.shadowBlur = 25;
+    c.fillRect(-.22, -.22, w + .44, h + .44); c.shadowBlur = 0;
+    for (let i = 0; i < w * h; i++) {
+      let color = (i % w + Math.floor(i / w)) % 2 ? canvasBlend('#172438','#49616f',daylight) : canvasBlend('#1b2a40','#536a77',daylight);
+      if (s.trail.has(i)) color = '#354949';
+      if (s.visual[i] === 1) color = '#4bbda0';
+      if (s.visual[i] === 2) color = '#356c8d';
+      if (s.visual[i] === 3) color = '#997844';
+      if (i === this.maze.start) color = '#28745e';
+      if (i === this.maze.goal) color = '#af8144';
+      c.fillStyle = color; c.fillRect(i % w + .025, Math.floor(i / w) + .025, .95, .95);
+    }
+    if (s.path.length) {
+      c.strokeStyle = '#ffdda5'; c.lineWidth = .06; c.beginPath();
+      s.path.forEach((i, n) => n ? c.lineTo(i % w + .5, Math.floor(i / w) + .5) : c.moveTo(i % w + .5, Math.floor(i / w) + .5)); c.stroke();
+    }
+    c.strokeStyle = canvasBlend('#7a91b0','#d1d6cc',daylight); c.lineWidth = .105; c.lineCap = 'square'; c.beginPath();
+    for (let i = 0; i < w * h; i++) {
+      const x = i % w, y = Math.floor(i / w), b = this.maze.walls[i];
+      if (b & 1) {c.moveTo(x, y); c.lineTo(x + 1, y);}
+      if (b & 8) {c.moveTo(x, y); c.lineTo(x, y + 1);}
+      if (x === w - 1 && (b & 2)) {c.moveTo(x + 1, y); c.lineTo(x + 1, y + 1);}
+      if (y === h - 1 && (b & 4)) {c.moveTo(x, y + 1); c.lineTo(x + 1, y + 1);}
+    }
+    if (atmosphere) {
+      const direction = atmosphere.altitude>=0 ? atmosphere.sun : atmosphere.moon;
+      c.shadowColor = `rgba(0,0,0,${.45+daylight*.2})`;
+      c.shadowBlur = 3; c.shadowOffsetX = -direction[0]*k*.4;
+      c.shadowOffsetY = -direction[2]*k*.4;
+    }
+    c.stroke(); c.shadowColor='transparent'; c.shadowBlur=0; c.shadowOffsetX=c.shadowOffsetY=0;
+    if (this.session.clock?.lantern && daylight < .99) {
+      const lx=s.player%w+.5, ly=Math.floor(s.player/w)+.5;
+      const light=c.createRadialGradient(lx,ly,.1,lx,ly,3.2);
+      light.addColorStop(0,`rgba(255,186,100,${.4*(1-daylight)})`);light.addColorStop(1,'rgba(255,186,100,0)');
+      c.save();c.beginPath();c.rect(0,0,w,h);c.clip();c.globalCompositeOperation='screen';c.fillStyle=light;c.fillRect(lx-3.2,ly-3.2,6.4,6.4);c.restore();
+    }
+    for (const [index, color, letter] of [[this.maze.start, '#6ce5c0', 'S'], [this.maze.goal, '#ffe0a9', 'F']]) {
+      c.strokeStyle = color; c.lineWidth = .04; c.beginPath(); c.arc(index % w + .5, Math.floor(index / w) + .5, .28, 0, Math.PI * 2); c.stroke();
+      c.fillStyle = color; c.font = 'bold .28px Arial'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(letter, index % w + .5, Math.floor(index / w) + .5);
+    }
+    c.fillStyle = '#fff6d5'; c.beginPath(); c.arc(s.player % w + .5, Math.floor(s.player / w) + .5, .20, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#fff6d5'; c.lineWidth = .02; c.beginPath(); c.arc(s.player % w + .5, Math.floor(s.player / w) + .5, .29, 0, Math.PI * 2); c.stroke();
+    if (this.editing && this.hover) {
+      const {x, y, direction: d} = this.hover; c.fillStyle = this.tool === 'goal' ? '#f1b96cb0' : '#6ce5c0b0';
+      if (this.tool === 'wall') {
+        if (d === 0) c.fillRect(x + .05, y - .08, .9, .16);
+        if (d === 1) c.fillRect(x + .92, y + .05, .16, .9);
+        if (d === 2) c.fillRect(x + .05, y + .92, .9, .16);
+        if (d === 3) c.fillRect(x - .08, y + .05, .16, .9);
+      } else c.fillRect(x + .1, y + .1, .8, .8);
+    }
+    c.restore();
+  }
+  update() {
+    const clock = this.session?.clock;
+    if (clock && (this.lastLitTime !== clock.visualMinutes || this.lastLantern !== clock.lantern)) {
+      this.lastLitTime = clock.visualMinutes; this.lastLantern = clock.lantern; this.draw();
+    }
+  }
+  capture() {return new Promise(resolve => this.canvas.toBlob(resolve, 'image/png'));}
+  dispose() {this.resizeObserver.disconnect(); this.canvas.remove();}
+}
+
+
+// ========== three-view.js ==========
+/**
+ * Maze Lab · Three.js scene adapter · v1.0.0
+ * THREE and OrbitControls are injected so the graph/controller stay dependency-free.
+ * One shared scene, TWO cameras. Camera changes never reconstruct the maze/session.
+ */
+
+class ThreeView {
+  constructor(THREE, OrbitControls, host) {
+    this.T = THREE; this.host = host; this.supported3D = true; this.mode = '3d';
+    this.maze = null; this.session = null; this.editing = false; this.tool = 'wall';
+    this.hover = null; this.lastPlayer = -1; this.pathKey = null;
+    this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: false, preserveDrawingBuffer: true, powerPreference: 'high-performance'});
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    this.renderer.setClearColor(0x101a23);
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.24;
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.canvas = this.renderer.domElement;
+    this.canvas.className = 'scene-canvas';
+    this.canvas.setAttribute('aria-hidden', 'true');
+    host.prepend(this.canvas);
+    this.scene = new THREE.Scene();
+    this.environment = new DayNightEnvironment(THREE, this.scene, this.renderer);
+    this.sun = this.environment.sun;
+    this.perspective = new THREE.PerspectiveCamera(40, 1, .1, 600);
+    this.orthographic = new THREE.OrthographicCamera(-10, 10, 10, -10, .1, 600);
+    this.orthographic.up.set(0, 0, -1);
+    this.cameras = {'3d': this.perspective, '2d': this.orthographic};
+    this.controls3d = new OrbitControls(this.perspective, this.canvas);
+    this.controls3d.enableDamping = true; this.controls3d.dampingFactor = .12;
+    this.controls3d.maxPolarAngle = Math.PI * .455;
+    this.controls3d.minPolarAngle = .06;
+    this.controls3d.enablePan = true;
+    this.controls3d.screenSpacePanning = false;
+    this.controls3d.target.set(0, 0, 0);
+    this.controls2d = new OrbitControls(this.orthographic, this.canvas);
+    this.controls2d.enableRotate = false; this.controls2d.enableDamping = true;
+    this.controls2d.dampingFactor = .12;
+    this.controls2d.minZoom = .4; this.controls2d.maxZoom = 6;
+    this.controls2d.screenSpacePanning = true;
+    this.controls2d.mouseButtons.LEFT = THREE.MOUSE.PAN;
+    this.controls2d.mouseButtons.RIGHT = THREE.MOUSE.PAN;
+    this.controls2d.touches.ONE = THREE.TOUCH.PAN;
+    this.controls2d.enabled = false;
+    this.raycaster = new THREE.Raycaster(); this.pointer = new THREE.Vector2();
+    this.plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -.04);
+    this.hitPoint = new THREE.Vector3(); this.matrix = new THREE.Matrix4();
+    this.dummy = new THREE.Object3D(); this.color = new THREE.Color();
+    this.playerFrom = new THREE.Vector3(); this.playerTarget = new THREE.Vector3();
+    this.playerT = 1; this.lastPath = null;
+    this.resizeObserver = new ResizeObserver(() => this.resize()); this.resizeObserver.observe(host);
+    this.canvas.addEventListener('contextmenu', e => e.preventDefault());
+    this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.resize();
+  }
+
+  get camera() {return this.cameras[this.mode];}
+  get controls() {return this.mode === '3d' ? this.controls3d : this.controls2d;}
+
+  resize() {
+    const w = Math.max(1, this.host.clientWidth), h = Math.max(1, this.host.clientHeight);
+    this.renderer.setSize(w, h, false);
+    this.aspect = w / h; this.perspective.aspect = this.aspect; this.perspective.updateProjectionMatrix();
+    const width = this.maze?.width || 16, height = this.maze?.height || 16;
+    const span = Math.max(height + 4.4, (width + 4.4) / this.aspect);
+    this.orthographic.left = -span * this.aspect / 2; this.orthographic.right = span * this.aspect / 2;
+    this.orthographic.top = span / 2; this.orthographic.bottom = -span / 2;
+    this.orthographic.updateProjectionMatrix();
+  }
+
+  /** Fit each camera independently, leaving the shared game state untouched. */
+  fit(both = false) {
+    if (!this.maze) return;
+    const T = this.T, {width: w, height: h} = this.maze;
+    const radius = Math.hypot(w, h) / 2 + 1;
+    if (both || this.mode === '3d') {
+      const verticalFov = T.MathUtils.degToRad(this.perspective.fov);
+      const horizontalFov = 2 * Math.atan(Math.tan(verticalFov / 2) * this.aspect);
+      const distance = radius / Math.sin(Math.min(verticalFov, horizontalFov) / 2) * 1.07;
+      this.controls3d.target.set(0, Math.max(w,h)*.075, 0);
+      this.perspective.position.copy(new T.Vector3(.85, 1.12, 1.25).normalize().multiplyScalar(distance)).add(this.controls3d.target);
+      this.perspective.lookAt(this.controls3d.target);
+      this.controls3d.minDistance = 3; this.controls3d.maxDistance = distance * 3;
+      this.controls3d.update(); this.controls3d.saveState();
+    }
+    if (both || this.mode === '2d') {
+      this.controls2d.target.set(0, 0, 0);
+      this.orthographic.position.set(0, Math.max(w, h) * 2.5 + 10, 0);
+      this.orthographic.up.set(0, 0, -1);
+      this.orthographic.zoom = 1; this.orthographic.lookAt(0, 0, 0);
+      this.orthographic.updateProjectionMatrix(); this.controls2d.update(); this.controls2d.saveState();
+    }
+  }
+
+  setMode(mode) {
+    if (!['2d', '3d'].includes(mode)) return;
+    // Flush remaining damping before disabling a camera, rather than carrying a drag across views.
+    this.controls.update(); this.mode = mode;
+    this.applyControls(); this.setHover(null);
+  }
+
+  setEditing(editing, tool = 'wall') {
+    this.editing = editing; this.tool = tool; this.applyControls(); this.setHover(null);
+    this.canvas.style.cursor = editing ? 'crosshair' : 'grab';
+  }
+
+  applyControls() {
+    this.controls3d.enabled = this.mode === '3d'; this.controls2d.enabled = this.mode === '2d';
+    // Editing uses left click; right drag and wheel remain available for camera movement.
+    this.controls3d.mouseButtons.LEFT = this.editing ? null : this.T.MOUSE.ROTATE;
+    this.controls3d.mouseButtons.RIGHT = this.T.MOUSE.PAN;
+    this.controls2d.mouseButtons.LEFT = this.editing ? null : this.T.MOUSE.PAN;
+    this.controls2d.mouseButtons.RIGHT = this.T.MOUSE.PAN;
+    this.controls3d.touches.ONE = this.editing ? null : this.T.TOUCH.ROTATE;
+    this.controls2d.touches.ONE = this.editing ? null : this.T.TOUCH.PAN;
+  }
+
+  cellPosition(index, y = 0) {
+    return new this.T.Vector3(index % this.maze.width + .5 - this.maze.width / 2,
+      y, Math.floor(index / this.maze.width) + .5 - this.maze.height / 2);
+  }
+
+  disposeGroup(group) {
+    if (!group) return;
+    const geometries = new Set(), materials = new Set();
+    group.traverse(obj => {
+      if (obj.geometry) geometries.add(obj.geometry);
+      for (const material of (Array.isArray(obj.material) ? obj.material : obj.material ? [obj.material] : [])) materials.add(material);
+      if (obj.isInstancedMesh || obj.isLight) obj.dispose();
+    });
+    for (const geometry of geometries) geometry.dispose();
+    for (const material of materials) {material.map?.dispose(); material.dispose();}
+    this.scene.remove(group);
+  }
+
+  build(maze, resetCamera = false) {
+    const T = this.T;
+    this.disposeGroup(this.board); this.maze = maze;
+    this.board = new T.Group(); this.scene.add(this.board); this.lastPath = null; this.pathLine = null;
+    const {width: w, height: h} = maze;
+    const baseMaterial = new T.MeshStandardMaterial({color: 0x243642, roughness: .85, metalness: .08});
+    const base = new T.Mesh(new T.BoxGeometry(w + .55, .3, h + .55), baseMaterial);
+    base.position.y = -.19; base.receiveShadow = true; base.castShadow = true; this.board.add(base);
+    const ground = new T.Mesh(new T.PlaneGeometry(w * 5 + 20, h * 5 + 20), new T.MeshStandardMaterial({color: 0x354452, roughness: 1}));
+    ground.rotation.x = -Math.PI / 2; ground.position.y = -.36; ground.receiveShadow = true; this.board.add(ground);
+    const gridSize = Math.max(w, h) * 4;
+    const grid = new T.GridHelper(gridSize, gridSize, 0x23313a, 0x1a2730);
+    grid.position.y = -.35; grid.material.transparent = true; grid.material.opacity = .28; this.board.add(grid);
+    const floorMaterial = new T.MeshStandardMaterial({color: 0xffffff, roughness: .97, metalness: 0});
+    this.tiles = new T.InstancedMesh(new T.BoxGeometry(.97, .05, .97), floorMaterial, w * h);
+    this.tiles.receiveShadow = true;
+    for (let i = 0; i < w * h; i++) {
+      this.dummy.position.copy(this.cellPosition(i, -.013)); this.dummy.rotation.set(0, 0, 0); this.dummy.scale.set(1, 1, 1); this.dummy.updateMatrix();
+      this.tiles.setMatrixAt(i, this.dummy.matrix); this.tiles.setColorAt(i, this.color.setHex(0x263c4a));
+    }
+    this.tiles.instanceMatrix.needsUpdate = true; this.board.add(this.tiles);
+    const edges = [];
+    for (let i = 0; i < w * h; i++) {
+      const x = i % w - w / 2, z = Math.floor(i / w) - h / 2;
+      if (maze.walls[i] & 1) edges.push([x + .5, z, 0]);
+      if (maze.walls[i] & 8) edges.push([x, z + .5, Math.PI / 2]);
+      if (i % w === w - 1 && (maze.walls[i] & 2)) edges.push([x + 1, z + .5, Math.PI / 2]);
+      if (Math.floor(i / w) === h - 1 && (maze.walls[i] & 4)) edges.push([x + .5, z + 1, 0]);
+    }
+    this.wallMesh = new T.InstancedMesh(new T.BoxGeometry(1.1, .61, .1), new T.MeshStandardMaterial({color: 0x8aa0aa, roughness: .77, metalness: .07}), edges.length);
+    const caps = new T.InstancedMesh(new T.BoxGeometry(1.1, .027, .103), new T.MeshStandardMaterial({color: 0xa9c0c8, roughness: .72}), edges.length);
+    this.wallMesh.castShadow = true; this.wallMesh.receiveShadow = true;
+    for (let i = 0; i < edges.length; i++) {
+      const [x, z, rotation] = edges[i];
+      this.dummy.position.set(x, .305, z); this.dummy.rotation.set(0, rotation, 0); this.dummy.updateMatrix(); this.wallMesh.setMatrixAt(i, this.dummy.matrix);
+      this.dummy.position.y = .62; this.dummy.updateMatrix(); caps.setMatrixAt(i, this.dummy.matrix);
+    }
+    this.wallMesh.instanceMatrix.needsUpdate = true; caps.instanceMatrix.needsUpdate = true;
+    this.board.add(this.wallMesh, caps);
+    const ring = (index, color, radius) => {
+      const marker = new T.Mesh(new T.TorusGeometry(radius, .035, 8, 32), new T.MeshBasicMaterial({color}));
+      marker.rotation.x = Math.PI / 2; marker.position.copy(this.cellPosition(index, .075)); this.board.add(marker); return marker;
+    };
+    this.startMarker = ring(maze.start, 0x6ce5c0, .3);
+    this.goalMarker = ring(maze.goal, 0xf1b96c, .3);
+    const goalPole = new T.Mesh(new T.CylinderGeometry(.015, .015, .93, 6), new T.MeshStandardMaterial({color: 0xffddaa}));
+    goalPole.position.copy(this.cellPosition(maze.goal, .5)); goalPole.position.x -= .16; this.board.add(goalPole);
+    const flag = new T.Mesh(new T.PlaneGeometry(.29, .2), new T.MeshBasicMaterial({color: 0xf1b96c, side: T.DoubleSide}));
+    flag.position.copy(goalPole.position); flag.position.x += .135; flag.position.y = .87; this.board.add(flag);
+    this.player = new T.Group();
+    const sphere = new T.Mesh(new T.SphereGeometry(.21, 20, 14), new T.MeshStandardMaterial({color: 0xfff8d5, roughness: .3, metalness: .15, emissive: 0xc4a672, emissiveIntensity: .26}));
+    sphere.position.y = .25; sphere.castShadow = true; this.player.add(sphere);
+    this.playerHalo = new T.Mesh(new T.TorusGeometry(.28, .019, 8, 32), new T.MeshBasicMaterial({color: 0xfff4c8}));
+    this.playerHalo.rotation.x = Math.PI / 2; this.playerHalo.position.y = .055; this.player.add(this.playerHalo);
+    const pointer = new T.Mesh(new T.ConeGeometry(.085, .14, 4), new T.MeshBasicMaterial({color: 0xfff8d5}));
+    pointer.rotation.z = Math.PI; pointer.position.y = .79; this.player.add(pointer); this.playerPointer = pointer;
+    this.playerLight = new T.PointLight(0xffc78d, 0, 6, 2);
+    this.playerLight.position.set(0, .95, 0); this.player.add(this.playerLight);
+    this.goalLight = new T.PointLight(0xffcf99, 0, 4.3, 2);
+    this.goalLight.position.copy(this.cellPosition(maze.goal, 1.05)); this.board.add(this.goalLight);
+    this.playerSphere = sphere;
+    this.board.add(this.player); this.lastPlayer = -1; this.playerT = 1;
+    this.hoverMesh = new T.Mesh(new T.BoxGeometry(1, 1, 1), new T.MeshBasicMaterial({color: 0x6ce5c0, opacity: .57, transparent: true, depthWrite: false}));
+    this.hoverMesh.visible = false; this.board.add(this.hoverMesh);
+    this.environment.resize(w, h);
+    this.resize(); if (resetCamera) this.fit(true);
+  }
+
+  sync(session, rebuild = false, immediate = false) {
+    const newSize = !this.maze || this.maze.width !== session.maze.width || this.maze.height !== session.maze.height;
+    if (!this.maze || rebuild) this.build(session.maze, newSize);
+    this.session = session;
+    const m = session.maze;
+    for (let i = 0; i < m.walls.length; i++) {
+      let color = ((i % m.width + Math.floor(i / m.width)) % 2) ? 0x203543 : 0x233846;
+      if (session.trail.has(i)) color = 0x354949;
+      if (session.visual[i] === 1) color = 0x48bd99;
+      if (session.visual[i] === 2) color = 0x356c8d;
+      if (session.visual[i] === 3) color = 0xb08342;
+      if (i === m.start) color = 0x28745e;
+      if (i === m.goal) color = 0xb38644;
+      if (i === session.player) color = 0x8c8e67;
+      this.tiles.setColorAt(i, this.color.setHex(color));
+    }
+    if (this.tiles.instanceColor) this.tiles.instanceColor.needsUpdate = true;
+    if (session.player !== this.lastPlayer || immediate || rebuild) {
+      this.playerFrom.copy(this.player.position); this.playerTarget.copy(this.cellPosition(session.player));
+      const first = this.lastPlayer < 0 || immediate || rebuild;
+      this.playerT = first || this.reducedMotion ? 1 : 0;
+      if (this.playerT === 1) this.player.position.copy(this.playerTarget);
+      this.lastPlayer = session.player;
+    }
+    if (this.lastPath !== session.path) {
+      if (this.pathLine) {this.board.remove(this.pathLine); this.pathLine.geometry.dispose(); this.pathLine.material.dispose(); this.pathLine = null;}
+      if (session.path.length > 1) {
+        const positions = session.path.map(index => this.cellPosition(index, .058));
+        this.pathLine = new this.T.Line(new this.T.BufferGeometry().setFromPoints(positions), new this.T.LineBasicMaterial({color: 0xffd59b, transparent: true, opacity: .9}));
+        this.board.add(this.pathLine);
+      }
+      this.lastPath = session.path;
+    }
+  }
+
+  getPick(clientX, clientY) {
+    if (!this.maze) return null;
+    const r = this.canvas.getBoundingClientRect();
+    this.pointer.set((clientX - r.left) / r.width * 2 - 1, -(clientY - r.top) / r.height * 2 + 1);
+    this.camera.updateMatrixWorld(); this.raycaster.setFromCamera(this.pointer, this.camera);
+    const hit = this.raycaster.ray.intersectPlane(this.plane, this.hitPoint);
+    if (!hit) return null;
+    const gx = hit.x + this.maze.width / 2, gy = hit.z + this.maze.height / 2;
+    const x = Math.floor(gx), y = Math.floor(gy);
+    if (x < 0 || y < 0 || x >= this.maze.width || y >= this.maze.height) return null;
+    const fx = gx - x, fy = gy - y;
+    const distances = [fy, 1 - fx, 1 - fy, fx];
+    const direction = distances.indexOf(Math.min(...distances));
+    return {index: y * this.maze.width + x, direction, x, y};
+  }
+
+  setHover(pick) {
+    this.hover = pick;
+    if (!this.hoverMesh) return;
+    this.hoverMesh.visible = Boolean(pick && this.editing);
+    if (!pick || !this.editing) return;
+    const pos = this.cellPosition(pick.index);
+    if (this.tool === 'wall') {
+      const d = pick.direction;
+      pos.x += [0, .5, 0, -.5][d]; pos.z += [-.5, 0, .5, 0][d]; pos.y = .67;
+      this.hoverMesh.scale.set(d % 2 ? .13 : .94, .07, d % 2 ? .94 : .13);
+    } else {
+      pos.y = .06; this.hoverMesh.scale.set(.85, .025, .85);
+    }
+    this.hoverMesh.position.copy(pos);
+    this.hoverMesh.material.color.setHex(this.tool === 'goal' ? 0xf1b96c : 0x6ce5c0);
+  }
+
+  update(dt, time) {
+    this.controls.update();
+    if (this.player && this.playerT < 1) {
+      this.playerT = Math.min(1, this.playerT + dt / .13);
+      const t = this.playerT * this.playerT * (3 - 2 * this.playerT);
+      this.player.position.lerpVectors(this.playerFrom, this.playerTarget, t);
+    }
+    if (this.playerPointer && !this.reducedMotion) this.playerPointer.position.y = .78 + Math.sin(time * 2.7) * .045;
+    if (this.session?.clock) {
+      this.environment.update(this.session.clock, this.camera, this.mode, time);
+      const night = 1-this.session.clock.sky.daylight;
+      this.playerLight.intensity = this.session.clock.lantern ? night*9 : 0;
+      this.goalLight.intensity = night*3;
+      this.playerSphere.material.emissiveIntensity = .2 + night*.75;
+    }
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  capture() {
+    this.renderer.render(this.scene, this.camera);
+    return new Promise(resolve => this.canvas.toBlob(resolve, 'image/png'));
+  }
+
+  dispose() {
+    this.resizeObserver.disconnect(); this.controls2d.dispose(); this.controls3d.dispose();
+    this.disposeGroup(this.board); this.environment.dispose(); this.renderer.dispose(); this.canvas.remove();
+  }
+}
+
+
+// ========== app.js ==========
+/** Maze Lab · DOM controller / animation scheduling · v1.0.0 */
+
+
+
+
+
+
+const $ = id => document.getElementById(id);
+fillIcons();
+const host = $('viewport');
+let session = new Session(generateMaze(16, 16, 'TUKE-2026', .08));
+let view = new CanvasView(host);
+let preferredCamera = '3d';
+let interaction = 'play', tool = 'wall', dirty = false;
+let undoStack = [], redoStack = [];
+let accumulator = 0, lastFrame = performance.now(), lastMove = -Infinity;
+let lastPhase = null, toastTimer = null, lastWallMessage = -Infinity;
+let engineError = null, pointerDown = null;
+let algorithm = 'bfs';
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let lastClockText = '';
+const descriptions = {
+  bfs: 'Перевіряє клітинки шар за шаром. Знаходить найкоротший шлях.',
+  astar: 'Прямує до цілі за мангеттенською евристикою. Знаходить найкоротший шлях.',
+  dfs: 'Спочатку йде вглиб однієї гілки. Знайдений шлях не завжди найкоротший.'
+};
+
+function notify(message, error = false) {
+  clearTimeout(toastTimer); const box = $('toast');
+  box.textContent = message; box.classList.toggle('error', error); box.hidden = false;
+  toastTimer = setTimeout(() => {box.hidden = true;}, error ? 4500 : 2900);
+}
+
+function updateCameraUI() {
+  for (const mode of ['2d', '3d']) {
+    const active = view.mode === mode;
+    $(`camera-${mode}`).classList.toggle('active', active);
+    $(`camera-${mode}`).setAttribute('aria-pressed', String(active));
+  }
+  $('camera-3d').disabled = !view.supported3D;
+  $('camera-3d').title = view.supported3D ? 'Перспективна камера (V)' : '3D потребує Three.js та доступного WebGL';
+  $('view-label').textContent = view.mode === '3d' ? 'ПЕРСПЕКТИВНИЙ ВИГЛЯД' : (view.supported3D ? 'ОРТОГРАФІЧНИЙ ВИГЛЯД' : '2D · РЕЗЕРВНИЙ РЕЖИМ');
+  $('minimap-panel').hidden = view.mode === '2d';
+  const hint = interaction === 'edit' ? 'Клік — редагування · ПКМ — зсув · колесо — масштаб'
+    : view.mode === '3d' ? 'Тягни, щоб обертати · колесо — масштаб' : 'Тягни, щоб пересувати · колесо — масштаб';
+  $('viewport-help').querySelector('span').textContent = hint;
+}
+
+function statusText() {
+  if (interaction === 'edit') return ['Редактор лабіринту', 'Зміна карти скидає пошук і повертає гравця на старт.', 'edit'];
+  const s = session;
+  switch (s.phase) {
+    case 'searching': return [`${algorithm === 'astar' ? 'A*' : algorithm.toUpperCase()} досліджує лабіринт`, `Перевірено ${s.expanded} · кандидатів ${s.frontier}`, 'search'];
+    case 'search-paused': return ['Пошук призупинено', 'Продовжуй або виконай один крок клавішею N.', 'pause'];
+    case 'solved': return ['Маршрут знайдено', `${s.pathLength} переходів до фінішу. Натисни «Пройти шлях».`, 'route'];
+    case 'unreachable': return ['Шлях не існує', 'Усі доступні клітинки перевірено. Зміни стіни або фініш.', 'alert'];
+    case 'walking': return ['Рух за знайденим маршрутом', `Пройдено ${s.walkIndex} із ${s.pathLength} переходів.`, 'route'];
+    case 'walk-paused': return ['Проходження призупинено', 'Продовжуй або виконай один крок клавішею N.', 'pause'];
+    case 'won': return ['Фініш! Лабіринт пройдено.', `Виконано ${s.moves} переходів. Створи нову карту або повернись на старт.`, 'check'];
+    default: return ['Готовий до дослідження', 'Знайди вихід сам або запусти алгоритм.', 'compass'];
+  }
+}
+
+function updateUI() {
+  const s = session, m = s.maze;
+  $('scene-title').firstChild.textContent = `Лабіринт ${m.width} × ${m.height} `;
+  $('dirty-marker').hidden = !dirty;
+  $('seed-chip').textContent = `SEED / ${m.seed || '∅'}${m.edited ? ' · EDITED' : ''}`;
+  $('stat-size').innerHTML = `${m.walls.length}<small>клітинок</small>`;
+  $('stat-visited').innerHTML = `${s.expanded}<small>/ ${m.walls.length}</small>`;
+  $('stat-path').innerHTML = `${s.pathLength === null ? '—' : s.pathLength}<small>кроків</small>`;
+  $('stat-moves').innerHTML = `${s.moves}<small>кроків</small>`;
+  $('path-note').textContent = s.phase === 'unreachable' ? 'Фініш недосяжний' : s.pathLength === null ? 'Ще не знайдено' : algorithm === 'dfs' ? 'Маршрут DFS' : 'Найкоротший маршрут';
+  $('frontier-note').textContent = s.search ? `У черзі кандидатів: ${s.frontier}` : `Позиція ${s.player % m.width + 1} : ${Math.floor(s.player / m.width) + 1}`;
+  $('search-progress').style.width = `${s.expanded / m.walls.length * 100}%`;
+  $('coordinate').textContent = `X ${String(s.player % m.width + 1).padStart(2, '0')} · Y ${String(Math.floor(s.player / m.width) + 1).padStart(2, '0')}`;
+  const running = ['searching', 'walking'].includes(s.phase), paused = ['search-paused', 'walk-paused'].includes(s.phase);
+  $('run-btn').innerHTML = `<i data-icon="${running ? 'pause' : 'play'}">${icon(running ? 'pause' : 'play')}</i><span>${running ? 'Пауза' : paused ? 'Продовжити' : 'Почати пошук'}</span>`;
+  $('run-btn').disabled = interaction === 'edit'; $('step-btn').disabled = interaction === 'edit';
+  $('walk-btn').disabled = s.phase !== 'solved' || interaction === 'edit';
+  $('algorithm').disabled = running || paused;
+  $('undo-btn').disabled = !undoStack.length; $('redo-btn').disabled = !redoStack.length;
+  const [title, detail, symbol] = statusText();
+  $('status-title').textContent = title; $('status-detail').textContent = detail;
+  $('status-symbol').innerHTML = `<i data-icon="${symbol}">${icon(symbol)}</i>`;
+  $('status-card').dataset.state = s.phase;
+  if (s.phase === 'won' && lastPhase !== 'won') notify('Фініш! Чудова робота.');
+  lastPhase = s.phase;
+  drawMinimap(); updateClockUI();
+}
+
+/** The numeric clock shows committed game time; the orbit/lighting ease towards it. */
+function updateClockUI() {
+  const c = session.clock, phase = phaseAt(c.totalMinutes);
+  const signature = `${c.totalMinutes}|${c.stepMode}|${c.lastStep}|${c.lantern}`;
+  if (signature !== lastClockText) {
+    lastClockText = signature;
+    $('world-time').textContent = c.text;
+    $('world-day').textContent = `ДЕНЬ ${String(c.day).padStart(2,'0')}`;
+    $('world-phase').textContent = phase.label; $('world-icon').textContent = phase.icon;
+    $('world-bar').dataset.phase = phase.id;
+    $('last-time-step').textContent = c.lastStep ? `+${c.lastStep} хв за крок` : 'Час іде лише під час руху';
+    $('step-minutes').value = c.stepMode;
+    $('lantern-btn').classList.toggle('active', c.lantern);
+    $('lantern-btn').setAttribute('aria-pressed', String(c.lantern));
+    $('lantern-btn').title = c.lantern ? 'Ліхтар увімкнений: засвітиться вночі' : 'Увімкнути нічний ліхтар';
+    if (document.activeElement !== $('time-input')) $('time-input').value = c.text;
+    $('time-scrubber').value = c.timeOfDay;
+    $('time-scrubber').setAttribute('aria-valuetext', c.text);
+  }
+  const angle = c.sky.angle;
+  // East on the left, west on the right: the upper half is above the horizon.
+  for (const [id, offset] of [['orbit-sun',0], ['orbit-moon',Math.PI]]) {
+    const a = angle+offset, x = 84-68*Math.cos(a), y = 45-31*Math.sin(a);
+    $(id).setAttribute('transform',`translate(${x.toFixed(2)} ${y.toFixed(2)})`);
+    $(id).setAttribute('opacity', Math.sin(a)>=0 ? '1' : '.18');
+  }
+}
+function applyWorldTime(minutes) {
+  try {session.pause(); accumulator = 0; session.clock.setTimeOfDay(minutes); sync();}
+  catch(error) {notify(error.message,true);}
+}
+$('step-minutes').addEventListener('change', () => {session.clock.setStepMode($('step-minutes').value);updateClockUI();});
+$('lantern-btn').addEventListener('click', () => {session.clock.lantern = !session.clock.lantern;updateClockUI();});
+document.querySelectorAll('[data-world-time]').forEach(button => button.addEventListener('click', () => applyWorldTime(Number(button.dataset.worldTime))));
+$('time-apply').addEventListener('click', () => {
+  const match = /^(\d{2}):(\d{2})$/.exec($('time-input').value);
+  if (!match) {notify('Вкажи час у форматі ГГ:ХХ.',true);return;}
+  applyWorldTime(Number(match[1])*60+Number(match[2]));
+});
+$('time-scrubber').addEventListener('input', () => applyWorldTime(Number($('time-scrubber').value)));
+$('time-reset').addEventListener('click', () => {session.pause();accumulator=0;session.clock.reset();sync();});
+$('time-settings').addEventListener('toggle', () => {if($('time-settings').open){session.pause();accumulator=0;sync();}});
+document.addEventListener('pointerdown', event => {if (!$('time-settings').contains(event.target)) $('time-settings').open=false;});
+
+function sync({rebuild = false, immediate = false} = {}) {
+  view.sync(session, rebuild, immediate); updateUI();
+}
+
+function drawMinimap() {
+  const canvas = $('minimap'), ctx = canvas.getContext('2d'), s = session, m = s.maze;
+  const k = 174 / Math.max(m.width, m.height), ox = (180 - m.width * k) / 2, oy = (180 - m.height * k) / 2;
+  ctx.clearRect(0, 0, 180, 180); ctx.fillStyle = '#15222d'; ctx.fillRect(0, 0, 180, 180);
+  for (let i = 0; i < m.walls.length; i++) {
+    if (!s.visual[i]) continue;
+    ctx.fillStyle = s.visual[i] === 3 ? '#b08851' : s.visual[i] === 1 ? '#6ce5c0' : '#356c8d';
+    ctx.fillRect(ox + i % m.width * k, oy + Math.floor(i / m.width) * k, k, k);
+  }
+  ctx.strokeStyle = '#718897'; ctx.lineWidth = .8; ctx.beginPath();
+  for (let i = 0; i < m.walls.length; i++) {
+    const x = ox + (i % m.width) * k, y = oy + Math.floor(i / m.width) * k;
+    if (m.walls[i] & 1) {ctx.moveTo(x, y); ctx.lineTo(x + k, y);}
+    if (m.walls[i] & 8) {ctx.moveTo(x, y); ctx.lineTo(x, y + k);}
+    if (i % m.width === m.width - 1 && m.walls[i] & 2) {ctx.moveTo(x + k, y); ctx.lineTo(x + k, y + k);}
+    if (Math.floor(i / m.width) === m.height - 1 && m.walls[i] & 4) {ctx.moveTo(x, y + k); ctx.lineTo(x + k, y + k);}
+  }
+  ctx.stroke();
+  for (const [index, color] of [[m.start, '#6ce5c0'], [m.goal, '#f1b96c'], [s.player, '#fff6d5']]) {
+    ctx.fillStyle = color; ctx.beginPath();
+    ctx.arc(ox + (index % m.width + .5) * k, oy + (Math.floor(index / m.width) + .5) * k, Math.max(2.1, k * .26), 0, Math.PI * 2); ctx.fill();
+  }
+}
+
+function setCamera(mode) {
+  preferredCamera = mode;
+  if (mode === '3d' && !view.supported3D) {notify('3D недоступне: потрібні Three.js та WebGL. Деталі в README.', true); return;}
+  view.setMode(mode); updateCameraUI();
+}
+
+function setInteraction(mode) {
+  interaction = mode;
+  if (mode === 'edit') {session.clearSearch(); accumulator = 0;}
+  for (const name of ['play', 'edit']) {
+    const active = name === mode;
+    $(`${name}-mode`).classList.toggle('active', active); $(`${name}-mode`).setAttribute('aria-pressed', String(active));
+    $(`${name === 'play' ? 'play' : 'editor'}-controls`).hidden = !active;
+  }
+  view.setEditing(mode === 'edit', tool); updateCameraUI(); sync();
+}
+
+function selectTool(name) {
+  tool = name; view.setEditing(interaction === 'edit', tool);
+  document.querySelectorAll('[data-tool]').forEach(btn => {btn.classList.toggle('active', btn.dataset.tool === tool); btn.setAttribute('aria-pressed', String(btn.dataset.tool === tool));});
+  $('edit-hint').textContent = tool === 'wall' ? 'Клік біля краю клітинки додає або прибирає стіну. Зовнішня межа захищена.'
+    : `Натисни на клітинку, щоб встановити ${tool === 'start' ? 'старт' : 'фініш'}. Старт і фініш не можуть збігатися.`;
+}
+
+function remember() {
+  undoStack.push(cloneMaze(session.maze)); if (undoStack.length > 50) undoStack.shift(); redoStack = [];
+}
+
+function editAt(pick) {
+  if (!pick || interaction !== 'edit') return;
+  const m = session.maze;
+  if (tool === 'wall' && adjacent(m, pick.index, pick.direction) === -1) {notify('Зовнішня межа захищена.', true); return;}
+  if (tool === 'start' && pick.index === m.goal || tool === 'goal' && pick.index === m.start) {notify('Старт і фініш мають бути різними.', true); return;}
+  if (tool !== 'wall' && m[tool] === pick.index) return;
+  remember(); const next = cloneMaze(m);
+  if (tool === 'wall') setWall(next, pick.index, pick.direction, !(next.walls[pick.index] & DIRS[pick.direction].bit));
+  else next[tool] = pick.index;
+  next.edited = true; session.load(next, {resetClock: false}); dirty = true; accumulator = 0;
+  sync({rebuild: true, immediate: true}); view.setHover(pick);
+}
+
+function historyMove(redo = false) {
+  if (interaction !== 'edit') return;
+  const source = redo ? redoStack : undoStack, dest = redo ? undoStack : redoStack;
+  if (!source.length) return;
+  dest.push(cloneMaze(session.maze)); session.load(source.pop(), {resetClock: false}); dirty = true; accumulator = 0;
+  sync({rebuild: true, immediate: true});
+}
+
+function bindCanvas() {
+  view.canvas.addEventListener('pointerdown', e => {
+    pointerDown = {x: e.clientX, y: e.clientY, id: e.pointerId, button: e.button};
+    host.focus({preventScroll: true});
+  });
+  view.canvas.addEventListener('pointermove', e => {
+    if (interaction === 'edit') view.setHover(view.getPick(e.clientX, e.clientY));
+  });
+  view.canvas.addEventListener('pointerup', e => {
+    if (pointerDown?.id === e.pointerId && pointerDown.button === 0 && Math.hypot(e.clientX - pointerDown.x, e.clientY - pointerDown.y) < 6) {
+      editAt(view.getPick(e.clientX, e.clientY));
+    }
+    pointerDown = null;
+  });
+  view.canvas.addEventListener('pointercancel', () => {pointerDown = null;});
+  view.canvas.addEventListener('pointerleave', () => view.setHover(null));
+}
+
+function toggleRun() {
+  if (interaction !== 'play') return;
+  if (['searching', 'walking'].includes(session.phase)) session.pause();
+  else if (['search-paused', 'walk-paused'].includes(session.phase)) session.resume();
+  else session.beginSearch(algorithm);
+  accumulator = 0; sync();
+}
+
+function move(direction) {
+  if (interaction !== 'play') return;
+  const now = performance.now(); if (now - lastMove < 145) return;
+  lastMove = now;
+  const result = session.move(direction);
+  if (result === 'moved') {accumulator = 0; sync();}
+  else if (now - lastWallMessage > 1700) {
+    lastWallMessage = now;
+    notify(result === 'wall' ? 'Тут стіна. Спробуй інший напрямок.' : 'Спочатку постав автоматичний рух або пошук на паузу.');
+  }
+}
+
+function confirmReplace() {return !dirty || window.confirm('Карта має незбережені зміни. Замінити її?');}
+function updateInputs() {
+  const m = session.maze; $('width').value = m.width; $('height').value = m.height;
+  $('seed').value = m.seed; $('loops').value = Math.round(m.loops * 100); $('loops-value').textContent = `${$('loops').value}%`;
+}
+function generate() {
+  try {
+    const next = generateMaze(Number($('width').value), Number($('height').value), $('seed').value, Number($('loops').value) / 100);
+    if (!confirmReplace()) return;
+    session.load(next); undoStack = []; redoStack = []; dirty = false; accumulator = 0;
+    sync({rebuild: true, immediate: true}); view.fit(true); notify('Новий лабіринт згенеровано.');
+  } catch (error) {notify(error.message, true);}
+}
+function downloadBlob(blob, name) {
+  if (!blob) throw new Error('Не вдалося підготувати файл.');
+  const url = URL.createObjectURL(blob), anchor = document.createElement('a');
+  anchor.href = url; anchor.download = name; document.body.append(anchor); anchor.click(); anchor.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+function fileName(extension) {
+  const m = session.maze, seed = m.seed.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 32) || 'custom';
+  return `maze-${m.width}x${m.height}-${seed}.${extension}`;
+}
+
+$('brand-home').addEventListener('click', e => {e.preventDefault(); view.fit();});
+$('camera-2d').addEventListener('click', () => setCamera('2d'));
+$('camera-3d').addEventListener('click', () => setCamera('3d'));
+$('fit-btn').addEventListener('click', () => view.fit());
+$('play-mode').addEventListener('click', () => setInteraction('play'));
+$('edit-mode').addEventListener('click', () => setInteraction('edit'));
+document.querySelectorAll('[data-tool]').forEach(btn => btn.addEventListener('click', () => selectTool(btn.dataset.tool)));
+document.querySelectorAll('[data-move]').forEach(btn => btn.addEventListener('click', () => move(Number(btn.dataset.move))));
+$('undo-btn').addEventListener('click', () => historyMove());
+$('redo-btn').addEventListener('click', () => historyMove(true));
+$('generate-btn').addEventListener('click', generate);
+$('random-seed').addEventListener('click', () => {
+  const values = new Uint32Array(1); crypto.getRandomValues(values);
+  $('seed').value = `MAZE-${values[0].toString(36).toUpperCase().padStart(6, '0')}`;
+  notify('Новий seed готовий. Натисни «Згенерувати лабіринт».');
+});
+$('loops').addEventListener('input', () => {$('loops-value').textContent = `${$('loops').value}%`;});
+$('speed').addEventListener('input', () => {$('speed-value').textContent = `${$('speed').value} кроків/с`;});
+$('algorithm').addEventListener('change', () => {
+  algorithm = $('algorithm').value; session.clearSearch(); accumulator = 0;
+  $('algorithm-description').textContent = descriptions[algorithm];
+  $('algorithm-badge').textContent = algorithm === 'dfs' ? 'БУДЬ-ЯКИЙ ШЛЯХ' : 'НАЙКОРОТШИЙ'; sync();
+});
+$('run-btn').addEventListener('click', toggleRun);
+$('step-btn').addEventListener('click', () => {if (interaction === 'play') {session.singleStep(algorithm); accumulator = 0; sync();}});
+$('walk-btn').addEventListener('click', () => {session.startWalking(); accumulator = 0; sync();});
+$('clear-btn').addEventListener('click', () => {session.clearSearch(); accumulator = 0; sync();});
+$('reset-player').addEventListener('click', () => {session.resetPlayer(); accumulator = 0; sync({immediate: true});});
+$('export-btn').addEventListener('click', () => {
+  try {
+    const saved = JSON.parse(serializeMaze(session.maze)); saved.world = session.clock.snapshot();
+    downloadBlob(new Blob([JSON.stringify(saved, null, 2)], {type: 'application/json'}), fileName('json'));
+    dirty = false; updateUI(); notify('Карту експортовано у JSON.');
+  } catch (error) {notify(error.message, true);}
+});
+$('import-btn').addEventListener('click', () => $('import-file').click());
+$('import-file').addEventListener('change', async e => {
+  const file = e.target.files?.[0]; e.target.value = ''; if (!file) return;
+  try {
+    if (file.size > 100_000) throw new Error('Максимальний розмір карти — 100 КБ.');
+    const text = await file.text(), next = parseMaze(text), world = JSON.parse(text).world;
+    if (world !== undefined) WorldClock.validate(world);
+    if (!confirmReplace()) return;
+    session.load(next); if (world !== undefined) session.clock.restore(world);
+    dirty = false; undoStack = []; redoStack = []; accumulator = 0;
+    updateInputs(); sync({rebuild: true, immediate: true}); view.fit(true); notify('Карту відкрито.');
+  } catch (error) {notify(error.message, true);}
+});
+$('screenshot-btn').addEventListener('click', async () => {
+  try {downloadBlob(await view.capture(), fileName('png')); notify('Знімок сцени збережено.');}
+  catch (error) {notify(`Не вдалося створити PNG: ${error.message}`, true);}
+});
+$('help-btn').addEventListener('click', () => {session.pause(); sync(); $('help-dialog').showModal();});
+$('about-btn').addEventListener('click', () => {session.pause(); sync(); $('about-dialog').showModal();});
+for (const dialog of document.querySelectorAll('dialog')) dialog.addEventListener('click', e => {
+  if (e.target !== dialog) return;
+  const r = dialog.getBoundingClientRect();
+  if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dialog.close();
+});
+$('about-project').textContent = PROJECT.title;
+$('step-minutes').value = session.clock.stepMode;
+for (const [label, text] of [['Autor', PROJECT.author], ['Univerzita', PROJECT.university], ['Fakulta', PROJECT.faculty], ['Katedra', PROJECT.department], ['Predmet', PROJECT.course], ['Školský rok', PROJECT.year], ['Verzia', PROJECT.version]]) {
+  const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = label; dd.textContent = text;
+  $('about-details').append(dt, dd);
+}
+
+document.addEventListener('keydown', e => {
+  if (document.querySelector('dialog[open]') || e.target.closest('input, select, textarea, [contenteditable="true"]')) return;
+  if ((e.ctrlKey || e.metaKey) && (e.code === 'KeyZ' || e.code === 'KeyY')) {
+    if (interaction === 'edit') {e.preventDefault(); historyMove(e.shiftKey || e.code === 'KeyY');} return;
+  }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const direction = {ArrowUp: 0, KeyW: 0, ArrowRight: 1, KeyD: 1, ArrowDown: 2, KeyS: 2, ArrowLeft: 3, KeyA: 3}[e.code];
+  if (direction !== undefined) {e.preventDefault(); move(direction); return;}
+  if (e.repeat) return;
+  if (e.code === 'Space' && !e.target.closest('button')) {e.preventDefault(); toggleRun();}
+  if (e.code === 'KeyV') {e.preventDefault(); setCamera(view.mode === '2d' ? '3d' : '2d');}
+  if (e.code === 'KeyF') {e.preventDefault(); view.fit();}
+  if (e.code === 'KeyN' && interaction === 'play') {e.preventDefault(); session.singleStep(algorithm); accumulator = 0; sync();}
+  if (e.code === 'KeyR' && interaction === 'play') {e.preventDefault(); session.resetPlayer(); accumulator = 0; sync({immediate: true});}
+});
+window.addEventListener('beforeunload', e => {if (dirty) {e.preventDefault(); e.returnValue = '';}});
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {session.pause(); accumulator = 0; sync();}
+  lastFrame = performance.now();
+});
+
+/** Read-only diagnostics for teaching and repeatable browser tests; no DOM internals. */
+Object.defineProperty(window, 'mazeLab', {value: Object.freeze({version: PROJECT.version, snapshot: () => ({
+  maze: JSON.parse(serializeMaze(session.maze)), player: session.player, phase: session.phase,
+  expanded: session.expanded, frontier: session.frontier, path: [...session.path], visual: [...session.visual],
+  moves: session.moves, camera: view.mode, engine: view.supported3D ? 'three' : 'canvas2d',
+  interaction, dirty, undoCount: undoStack.length, redoCount: redoStack.length,
+  cameraType: view.supported3D ? view.camera.type : 'Canvas2D',
+  drawCalls: view.supported3D ? view.renderer.info.render.calls : null,
+  clock: session.clock.snapshot(), visualMinutes: session.clock.visualMinutes,
+  sky: session.clock.sky, lighting: view.supported3D ? view.environment.snapshot() : null
+})}), writable: false});
+
+function animate(now) {
+  const dt = Math.min(.1, Math.max(0, (now - lastFrame) / 1000)); lastFrame = now;
+  let changed = false;
+  if (!document.hidden && ['searching', 'walking'].includes(session.phase)) {
+    const interval = session.phase === 'searching' ? 1 / Number($('speed').value) : 1 / 6;
+    accumulator += dt;
+    let steps = 0;
+    while (accumulator >= interval && steps++ < 24) {
+      accumulator -= interval;
+      if (session.phase === 'searching') session.advanceSearch();
+      else if (session.phase === 'walking') session.advanceWalk();
+      else {accumulator = 0; break;}
+      changed = true;
+    }
+  }
+  if (changed) sync();
+  session.clock.update(dt, reducedMotion); updateClockUI();
+  view.update(dt, now / 1000);
+  requestAnimationFrame(animate);
+}
+
+/** Load real Three.js; failure is visible and does not pretend that 3D works. */
+async function loadThree() {
+  const slowTimer = setTimeout(() => showEngineFailure(new Error('Завантаження Three.js триває надто довго.')), 9000);
+  try {
+    const [THREE, {OrbitControls}] = await Promise.all([import('three'), import('three/addons/controls/OrbitControls.js')]);
+    clearTimeout(slowTimer);
+    const newView = new ThreeView(THREE, OrbitControls, host);
+    try {newView.sync(session, true, true); newView.fit(true); newView.setMode(preferredCamera); newView.setEditing(interaction === 'edit', tool);}
+    catch (error) {newView.dispose(); throw error;}
+    const oldView = view; view = newView; oldView.dispose(); bindCanvas();
+    $('engine-label').textContent = `Three.js r${THREE.REVISION} · WebGL`;
+    $('load-note').hidden = true; updateCameraUI(); sync();
+    // A lost GPU context is distinct from a network failure. Keep the graph usable.
+    view.canvas.addEventListener('webglcontextlost', e => {
+      e.preventDefault(); session.pause();
+      const lostView = view; view = new CanvasView(host); lostView.dispose(); bindCanvas();
+      view.sync(session); view.setEditing(interaction === 'edit', tool); showEngineFailure(new Error('Контекст WebGL втрачено. Перезавантаж сторінку для повторної спроби.'));
+    }, {once: true});
+  } catch (error) {clearTimeout(slowTimer); showEngineFailure(error);}
+}
+function showEngineFailure(error) {
+  engineError = error; $('engine-label').textContent = 'Canvas 2D · резервний';
+  $('load-note').textContent = '3D недоступне. Працює резервний 2D. Для 3D потрібен WebGL; без інтернету запускай локальну збірку з Three.js (див. README).';
+  host.before($('load-note'));
+  $('load-note').hidden = false; updateCameraUI(); updateUI();
+  console.warn('Maze Lab: Three.js/WebGL unavailable. Canvas 2D fallback is active.', error.message);
+}
+
+bindCanvas(); sync({rebuild: true, immediate: true}); updateCameraUI();
+requestAnimationFrame(animate);
+loadThree();
+
+
+</script>
+</body>
+</html>

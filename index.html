@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10171f">
+  <meta name="description" content="Інтерактивний лабіринт: 2D/3D, пошук шляху, редактор та ручне проходження.">
+  <title>Maze Lab — лабіринт, день і ніч</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23141f28'/%3E%3Cpath d='M16 48V16h32v32H32V32h-8' fill='none' stroke='%236ce5c0' stroke-width='5' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./src/style.css">
+  <script type="importmap">
+  {"imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+  }}
+  </script>
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="#" aria-label="Maze Lab, головна" id="brand-home">
+      <svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true"><rect x=".5" y=".5" width="35" height="35" rx="9"/><path d="M10 27V9h17v18h-9V17h-4"/></svg>
+      <span>MAZE<span class="brand-light">LAB</span><small>ЛАБОРАТОРІЯ ШЛЯХІВ</small></span>
+    </a>
+    <div class="header-center"><span class="live-dot"></span> Інтерактивна комп’ютерна графіка</div>
+    <nav class="header-actions" aria-label="Дії проєкту">
+      <button id="import-btn" class="button quiet" title="Відкрити карту JSON"><i data-icon="folder"></i><span>Відкрити</span></button>
+      <button id="export-btn" class="button quiet" title="Зберегти поточну карту як JSON"><i data-icon="download"></i><span>Зберегти</span></button>
+      <span class="separator"></span>
+      <button id="help-btn" class="icon-button" title="Керування і довідка" aria-label="Керування і довідка"><i data-icon="help"></i></button>
+      <button id="about-btn" class="about-button" title="Про проєкт">PG</button>
+    </nav>
+  </header>
+
+  <main class="app-main">
+    <aside class="sidebar" aria-label="Налаштування лабіринту">
+      <section class="sidebar-section introduction">
+        <span class="eyebrow">ДОСЛІДЖУЙ. БУДУЙ. ЗНАХОДЬ.</span>
+        <h1>Кожен лабіринт —<br>новий маршрут.</h1>
+        <p>Створи свій світ і подивись,<br>як алгоритми знаходять вихід.</p>
+      </section>
+      <section class="sidebar-section">
+        <div class="section-heading"><h2><span class="section-number">01</span> Генератор</h2><span class="tag">DFS</span></div>
+        <div class="two-columns dimensions">
+          <label for="width">Ширина <span>клітинок</span><input id="width" type="number" value="16" min="4" max="40" step="1" inputmode="numeric"></label>
+          <label for="height">Висота <span>клітинок</span><input id="height" type="number" value="16" min="4" max="40" step="1" inputmode="numeric"></label>
+        </div>
+        <label class="field-label" for="seed">Seed <span>той самий seed → та сама карта*</span></label>
+        <div class="input-with-button"><input id="seed" value="TUKE-2026" maxlength="64" spellcheck="false" autocomplete="off" aria-label="Seed генератора"><button id="random-seed" class="icon-button" title="Новий випадковий seed" aria-label="Новий випадковий seed"><i data-icon="shuffle"></i></button></div>
+        <div class="range-label"><label for="loops">Додаткові проходи</label><output id="loops-value" for="loops">8%</output></div>
+        <input id="loops" type="range" min="0" max="100" step="1" value="8">
+        <div class="range-endpoints"><span>Без циклів</span><span>Більше маршрутів</span></div>
+        <button id="generate-btn" class="button secondary full-width"><i data-icon="refresh"></i> Згенерувати лабіринт</button>
+      </section>
+      <section class="sidebar-section search-section">
+        <div class="section-heading"><h2><span class="section-number">02</span> Пошук шляху</h2><span class="tag" id="algorithm-badge">НАЙКОРОТШИЙ</span></div>
+        <label for="algorithm" class="sr-only">Алгоритм пошуку</label>
+        <select id="algorithm">
+          <option value="bfs">BFS · пошук у ширину</option>
+          <option value="astar">A* · евристичний пошук</option>
+          <option value="dfs">DFS · пошук у глибину</option>
+        </select>
+        <p class="algorithm-description" id="algorithm-description">Перевіряє клітинки шар за шаром. Знаходить найкоротший шлях.</p>
+        <div class="range-label"><label for="speed">Швидкість пошуку</label><output id="speed-value" for="speed">40 кроків/с</output></div>
+        <input id="speed" type="range" min="1" max="120" step="1" value="40">
+        <div class="simulation-buttons">
+          <button id="run-btn" class="button primary"><i data-icon="play"></i><span>Почати пошук</span></button>
+          <button id="step-btn" class="icon-button bordered" title="Один крок алгоритму або проходження (N)" aria-label="Один крок"><i data-icon="step"></i></button>
+        </div>
+        <div class="two-columns small-gap">
+          <button id="walk-btn" class="button secondary" disabled><i data-icon="route"></i> Пройти шлях</button>
+          <button id="clear-btn" class="button quiet"><i data-icon="erase"></i> Очистити</button>
+        </div>
+        <p class="microcopy">Пошук починається з позиції гравця.</p>
+      </section>
+      <section class="sidebar-section editor-section">
+        <div class="section-heading"><h2><span class="section-number">03</span> Режим взаємодії</h2></div>
+        <div class="segment mode-segment" role="group" aria-label="Режим взаємодії">
+          <button id="play-mode" class="active" aria-pressed="true"><i data-icon="gamepad"></i> Проходження</button>
+          <button id="edit-mode" aria-pressed="false"><i data-icon="edit"></i> Редактор</button>
+        </div>
+        <div id="play-controls">
+          <p class="mode-description">Керуй гравцем через <kbd>WASD</kbd> або <kbd>↑ ↓ ← →</kbd>.</p>
+          <button id="reset-player" class="button quiet full-width"><i data-icon="rewind"></i> Повернути на старт <kbd>R</kbd></button>
+        </div>
+        <div id="editor-controls" hidden>
+          <div class="edit-tools" role="group" aria-label="Інструмент редактора">
+            <button class="active" data-tool="wall" aria-pressed="true"><i data-icon="wall"></i> Стіна</button>
+            <button data-tool="start" aria-pressed="false"><span class="tiny-dot mint"></span> Старт</button>
+            <button data-tool="goal" aria-pressed="false"><span class="tiny-dot gold"></span> Фініш</button>
+          </div>
+          <p id="edit-hint" class="mode-description">Клік біля краю клітинки додає або прибирає стіну. Зовнішня межа захищена.</p>
+          <div class="two-columns small-gap"><button id="undo-btn" class="button quiet" disabled><i data-icon="undo"></i> Скасувати</button><button id="redo-btn" class="button quiet" disabled><i data-icon="redo"></i> Повторити</button></div>
+        </div>
+      </section>
+      <footer class="sidebar-footer"><span class="live-dot"></span><span id="engine-label">Підключення Three.js…</span><span class="version">v1.1</span></footer>
+    </aside>
+
+    <section class="workspace" aria-label="Інтерактивна сцена">
+      <div class="workspace-toolbar">
+        <div class="scene-heading"><span class="eyebrow">РОБОЧА СЦЕНА</span><h2 id="scene-title">Лабіринт 16 × 16 <span id="dirty-marker" hidden>•</span></h2></div>
+        <div class="view-actions">
+          <div class="segment camera-segment" role="group" aria-label="Камера">
+            <button id="camera-2d" aria-pressed="false"><i data-icon="grid"></i> 2D</button>
+            <button id="camera-3d" class="active" aria-pressed="true"><i data-icon="cube"></i> 3D</button>
+          </div>
+          <button id="fit-btn" class="icon-button bordered" title="Показати весь лабіринт (F)" aria-label="Показати весь лабіринт"><i data-icon="fit"></i></button>
+          <button id="screenshot-btn" class="icon-button bordered" title="Зберегти знімок сцени PNG" aria-label="Зберегти знімок сцени"><i data-icon="camera"></i></button>
+        </div>
+      </div>
+      <section class="world-bar" id="world-bar" data-phase="day" aria-label="Освітлення та ігровий час">
+        <div class="world-readout"><span class="world-weather" id="world-icon" aria-hidden="true">☀</span><div><span id="world-day">ДЕНЬ 01</span><div class="clock-line"><time id="world-time">08:00</time><span id="world-phase">День</span></div><small id="last-time-step">Час іде лише під час руху</small></div></div>
+        <svg class="orbit-clock" viewBox="0 0 168 85" aria-label="Положення сонця та місяця; нижня півдуга під горизонтом" role="img">
+          <path d="M16 45 A68 31 0 0 1 152 45" class="orbit-day"/><path d="M16 45 A68 31 0 0 0 152 45" class="orbit-night"/><path d="M8 45H160" class="orbit-horizon"/>
+          <text x="7" y="41">СХ</text><text x="75" y="10">НЕБО</text><text x="148" y="41">ЗХ</text><text x="55" y="84">ПІД ГОРИЗОНТОМ</text>
+          <g id="orbit-sun"><circle r="8" fill="#ffcb7b" fill-opacity=".15"/><circle r="4" fill="#ffd694"/></g>
+          <g id="orbit-moon"><circle r="7" fill="#b6caff" fill-opacity=".13"/><path d="M-1-4a4.5 4.5 0 1 0 4.5 6A4.6 4.6 0 0 1-1-4" fill="#bed6ff"/></g>
+        </svg>
+        <div class="world-actions"><label class="step-time-field" for="step-minutes"><span>1 КРОК ГРАВЦЯ</span><select id="step-minutes"><option value="random">30–60 хв · випадково</option><option value="30">30 хвилин</option><option value="45">45 хвилин</option><option value="60">60 хвилин</option></select></label>
+          <button id="lantern-btn" class="icon-button bordered active" aria-label="Нічний ліхтар" aria-pressed="true" title="Нічний ліхтар"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 3h8l-1 5H9L8 3Zm1 5v12h6V8M10 12h4M4 3 2 1m18 2 2-2M12 1V0"/></svg></button>
+          <details class="time-settings" id="time-settings"><summary class="button secondary" title="Встановити час та переглянути освітлення">Час <span aria-hidden="true">⌄</span></summary><div class="time-popover">
+            <div class="eyebrow">ПЕРЕГЛЯД ОСВІТЛЕННЯ</div><p>Вибір часу ставить автопроходження на паузу.</p>
+            <div class="time-presets"><button data-world-time="360">☀ Світанок</button><button data-world-time="720">☀ Полудень</button><button data-world-time="1080">◒ Захід</button><button data-world-time="0">☾ Ніч</button></div>
+            <label class="sr-only" for="time-scrubber">Час доби</label><input id="time-scrubber" type="range" min="0" max="1439" step="1" value="480"><div class="time-scale"><span>00:00</span><span>12:00</span><span>23:59</span></div>
+            <div class="set-time-row"><label for="time-input" class="sr-only">Встановити час</label><input id="time-input" type="time" value="08:00"><button id="time-apply" class="button secondary">Встановити</button></div>
+            <button id="time-reset" class="button quiet full-width">Скинути годинник · день 1, 08:00</button>
+          </div></details>
+        </div>
+      </section>
+      <div class="viewport" id="viewport" tabindex="0" aria-label="Лабіринт. WASD або стрілки — рух. Клавіша V — змінити камеру.">
+        <div class="viewport-top"><span class="scene-chip"><span class="tiny-dot mint"></span><span id="view-label">ПЕРСПЕКТИВНИЙ ВИГЛЯД</span></span><span class="scene-chip seed-chip" id="seed-chip">SEED / TUKE-2026</span></div>
+        <div class="status-card" id="status-card"><span class="status-symbol" id="status-symbol"><i data-icon="compass"></i></span><div><strong id="status-title">Готовий до дослідження</strong><p id="status-detail">Знайди вихід сам або запусти алгоритм.</p></div></div>
+        <div class="viewport-bottom"><div class="viewport-help" id="viewport-help"><i data-icon="mouse"></i><span>Тягни, щоб обертати · колесо — масштаб</span></div><div class="coordinate" id="coordinate">X 01 · Y 01</div></div>
+        <div class="minimap-panel" id="minimap-panel"><span>ВИГЛЯД ЗВЕРХУ <b>↑ N</b></span><canvas id="minimap" width="180" height="180" aria-label="Мінікарта з позицією гравця"></canvas></div>
+        <div class="dpad" role="group" aria-label="Рух гравця"><button data-move="0" class="dpad-up" aria-label="Рух на північ">↑</button><button data-move="3" class="dpad-left" aria-label="Рух на захід">←</button><button data-move="2" class="dpad-down" aria-label="Рух на південь">↓</button><button data-move="1" class="dpad-right" aria-label="Рух на схід">→</button></div>
+        <div id="load-note" class="load-note" hidden></div>
+        <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+      </div>
+      <div class="scene-footer">
+        <div class="legend" aria-label="Умовні позначення"><span><b class="legend-dot player"></b>Гравець</span><span><b class="legend-dot frontier"></b>Кандидати</span><span><b class="legend-dot visited"></b>Перевірені</span><span><b class="legend-dot path"></b>Маршрут</span></div>
+        <span class="shortcuts"><kbd>V</kbd> камера <kbd>Space</kbd> пауза</span>
+      </div>
+      <div class="stats-grid" aria-label="Статистика">
+        <article class="stat"><span>РОЗМІР КАРТИ</span><strong id="stat-size">256<small>клітинок</small></strong><div class="stat-foot">Простір для дослідження</div></article>
+        <article class="stat"><span>ПЕРЕВІРЕНО</span><strong id="stat-visited">0<small>/ 256</small></strong><div class="progress-track"><span id="search-progress"></span></div></article>
+        <article class="stat"><span>ДОВЖИНА ШЛЯХУ</span><strong id="stat-path">—<small>кроків</small></strong><div class="stat-foot" id="path-note">Ще не знайдено</div></article>
+        <article class="stat"><span>КРОКИ ГРАВЦЯ</span><strong id="stat-moves">0<small>кроків</small></strong><div class="stat-foot" id="frontier-note">Готовий до руху</div></article>
+      </div>
+    </section>
+  </main>
+  <input type="file" id="import-file" accept="application/json,.json" hidden>
+  <dialog id="help-dialog" aria-labelledby="help-title">
+    <form method="dialog"><button class="dialog-close icon-button" aria-label="Закрити">×</button></form>
+    <span class="eyebrow">ЯК ЦЕ ПРАЦЮЄ</span><h2 id="help-title">Твій шлях через лабіринт.</h2>
+    <div class="help-grid"><section><h3>Дві камери, одна сцена</h3><p><b>2D</b> — ортографічний вигляд зверху: зручно читати карту й редагувати стіни. <b>3D</b> — перспективний вигляд з обертанням. Перемикання не скидає пошук або позицію гравця.</p></section><section><h3>Ручне проходження</h3><p><kbd>W / ↑</kbd> північ; <kbd>D / →</kbd> схід; <kbd>S / ↓</kbd> південь; <kbd>A / ←</kbd> захід. Напрямки прив’язані до карти, а не до повороту 3D-камери. Орієнтуйся за мінікартою.</p></section><section><h3>Алгоритми</h3><p><b>BFS</b> та <b>A*</b> знаходять найкоротший шлях, бо всі переходи тут мають однакову вартість. <b>DFS</b> знаходить будь-який шлях: він може бути довшим. Додаткові проходи створюють альтернативні маршрути.</p></section><section><h3>Редактор</h3><p>Обери «Стіна» і натисни біля межі двох клітинок. Для старту й фінішу натисни центр клітинки. Є скасування/повторення останніх 50 змін. Можна створити нерозв’язну карту — це коректний результат експерименту.</p></section></div>
+    <section class="world-help"><h3>День, ніч і час за кроками</h3><p>Кожен успішний перехід, ручний або автоматичний, додає 30–60 хвилин (або фіксовані 30 / 45 / 60). Пошук маршруту, спроби пройти крізь стіну й очікування час не змінюють. Сонце, місяць, тіні та освітлення плавно переходять до нового часу. Уночі вмикається ліхтар гравця. Нова карта починається о 08:00; клавіша R і редагування карти зберігають час. Меню «Час» дозволяє переглянути будь-яку пору доби. Це стилізований цикл, а не астрономічна модель.</p></section><div class="help-shortcuts"><span><kbd>V</kbd> камера</span><span><kbd>F</kbd> умістити карту</span><span><kbd>Space</kbd> пошук / пауза</span><span><kbd>N</kbd> один крок</span><span><kbd>R</kbd> на старт</span><span><kbd>Ctrl Z</kbd> скасувати</span></div>
+    <p class="dialog-note">* Відтворення генерації потребує однакових seed, ширини, висоти, частки додаткових проходів і версії генератора. Зміни редактора зберігаються лише в JSON. Знімок PNG містить сцену без панелей інтерфейсу.</p>
+  </dialog>
+  <dialog id="about-dialog" aria-labelledby="about-title">
+    <form method="dialog"><button class="dialog-close icon-button" aria-label="Закрити">×</button></form>
+    <span class="eyebrow">SEMESTRÁLNY PROJEKT</span><h2 id="about-title">Maze Lab</h2><p class="about-subtitle" id="about-project"></p>
+    <dl id="about-details"></dl><p class="dialog-note">Three.js · JavaScript · WebGL. Карту та налаштування не надсилаємо на сервер. Резервний режим Canvas 2D використовується, якщо Three.js або WebGL недоступні.</p>
+  </dialog>
+  <noscript><div class="noscript">Для роботи Maze Lab увімкни JavaScript у браузері.</div></noscript>
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
